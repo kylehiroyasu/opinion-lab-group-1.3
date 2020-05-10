@@ -58,4 +58,4 @@ class Model(nn.Module):
         return softmax
 
     def weighted_sum(self, weights, x):
-        return t.sum(x * weights[:,None,:], dim=1)
+        return t.sum(x * weights[:,:, None], dim=1)

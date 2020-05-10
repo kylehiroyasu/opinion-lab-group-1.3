@@ -6,7 +6,7 @@ import pandas as pd
 
 class AspectDataset(Dataset):
 
-    def __init__(self, sentences, entities, entity_dict, attributes, attribute_dict):
+    def __init__(self, sentences, entities, entity_dict, attributes, attribute_dict, embeddings=None):
         """ Intializes the AspectDataset. Important: For the labels use the same order
         as the sentences, thus the sentences are linked to the labels with the same index
         TODO: What happens with Sentences with multiple labels? Are we working with lists
@@ -27,7 +27,7 @@ class AspectDataset(Dataset):
         self.entity_dict = entity_dict
         self.attributes = attributes
         self.attribute_dict = attribute_dict
-        self.embeddings = None
+        self.embeddings = embeddings
 
     def addEmbeddings(self, embeddings):
         """ Adds embeddings to the dataset. If you do this the items will be embeddings
@@ -50,15 +50,16 @@ class AspectDataset(Dataset):
             (Sentence, int: entity, int: attribute)
         """
         if self.embeddings is None:
-            return (self.sentences[idx], self.entities[idx], self.attributes[idx])
+            raise RuntimeError("No embeddings defined for the ")
         else:
-            sentence = self.embeddings.embed(self.sentences[idx])
+            sentence = self.sentences[idx]
+            self.embeddings.embed(sentence)
             sentence = [t.unsqueeze(token.embedding, dim=0) for token in sentence]
             sentence = t.cat(sentence, dim=0)
             return (sentence, self.entities[idx], self.attributes[idx])
 
 
-def dfToDataset(df, entity_dict, attribute_dict):
+def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
     """ Expects as pandas.DataFrame with the columns: text, entity, attribute.
     Creates an AspectDataset. Dicts are used to map the numeric values to their
     names. If there are still rows with NaN values for the labels, they will be
@@ -78,8 +79,12 @@ def dfToDataset(df, entity_dict, attribute_dict):
     for row in df.itertuples():
         if pd.notna(row.attribute) and pd.notna(row.entity):
             sentences.append(Sentence(row.text, use_tokenizer=True))
-            entities.append(entity_dict[row.entity])
-            attributes.append(attribute_dict[row.attribute])
+            entities.append(t.tensor([entity_dict[row.entity]]))
+            attributes.append(t.tensor([attribute_dict[row.attribute]]))
+        else: 
+            sentences.append(Sentence(row.text, use_tokenizer=True))
+            entities.append(t.tensor([entity_dict["NaN"]]))
+            attributes.append(t.tensor([attribute_dict["NaN"]]))
 
     entity_id_dict = {}
     attribute_id_dict = {}
@@ -87,4 +92,11 @@ def dfToDataset(df, entity_dict, attribute_dict):
         entity_id_dict[value] = key
     for key, value in attribute_dict.items():
         attribute_id_dict[value] = key
-    return AspectDataset(sentences, entities, entity_id_dict, attributes, attribute_id_dict)
+    return AspectDataset(sentences, entities, entity_id_dict, attributes, attribute_id_dict, embeddings)
+
+
+def collate(batch):
+    sentences = [sample[0] for sample in batch]
+    entities = t.cat([sample[1] for sample in batch])
+    attributes = t.cat([sample[2] for sample in batch])
+    return sentences, entities, attributes

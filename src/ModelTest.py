@@ -51,8 +51,8 @@ class TestTroughput(unittest.TestCase):
                                   [0, 1],
                                   [0.25, 0.75]])
         self.result = t.tensor([[1.5, 0],
-                                [0, 6],
-                                [3, 9.75]])
+                                [0, 5],
+                                [4, 8.25]])
         result = self.model.weighted_sum(self.weights, self.data)
         self.assertEqual(self.result.size(), result.size())
         for i in range(self.result.size()[0]):
