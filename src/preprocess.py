@@ -67,13 +67,13 @@ def clean_texts(docs, remove_stopwords=False, lemmatize=False):
     nlp = spacy.load("en_core_web_sm")
 
     new_docs = []
-    for doc in docs
+    for doc in docs:
         text = doc['text']
-        text = space_regex.replace(' ', text)
-        text = love_regex.replace('love', text)
-        text = wow_regex.replace('wow', text)
-        text = perfect_regex.replace('perfect', text)
-        spacy_doc = nlp(t)
+        text = space_regex.sub(' ', text)
+        text = love_regex.sub('love', text)
+        text = wow_regex.sub('wow', text)
+        text = perfect_regex.sub('perfect', text)
+        spacy_doc = nlp(text)
         selected_tokens = []
         for token in spacy_doc:
             if token.is_stop and remove_stopwords:
@@ -86,6 +86,7 @@ def clean_texts(docs, remove_stopwords=False, lemmatize=False):
         doc['text'] = text
         new_docs.append(doc)
     return new_docs
+
 
 def load_data_as_df(path, remove_stopwords=False, lemmatize=False):
     """ Takes a file path and returns the important parts as denormalized
@@ -103,8 +104,6 @@ def load_data_as_df(path, remove_stopwords=False, lemmatize=False):
         doc = f.readlines()
     doc_string = ' '.join(doc)
     list_of_docs = doc_to_jsonl(doc_string)
-    cleaned_docs = clean_texts(list_of_docs, 
-                                remove_stopwords=remove_stopwords, 
-                                lemmatize=lemmatize)
-    df = pd.DataFrame(list_of_docs)
+    cleaned_docs = clean_texts(list_of_docs, remove_stopwords=remove_stopwords, lemmatize=lemmatize)
+    df = pd.DataFrame(cleaned_docs)
     return df
