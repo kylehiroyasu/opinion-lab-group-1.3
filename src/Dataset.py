@@ -1,12 +1,13 @@
 import torch as t
 from torch.utils.data import Dataset
+from torch.nn.utils.rnn import pad_sequence
 from flair.data import Sentence
 
 import pandas as pd
 
 class AspectDataset(Dataset):
 
-    def __init__(self, sentences, entities, entity_dict, attributes, attribute_dict, embeddings=None):
+    def __init__(self, sentences, entities, entity_dict, attributes, attribute_dict, embeddings=None, ):
         """ Intializes the AspectDataset. Important: For the labels use the same order
         as the sentences, thus the sentences are linked to the labels with the same index
         TODO: What happens with Sentences with multiple labels? Are we working with lists
@@ -50,7 +51,7 @@ class AspectDataset(Dataset):
             (Sentence, int: entity, int: attribute)
         """
         if self.embeddings is None:
-            raise RuntimeError("No embeddings defined for the ")
+            raise RuntimeError("No embeddings defined for the dataset.")
         else:
             sentence = self.sentences[idx]
             self.embeddings.embed(sentence)
@@ -58,6 +59,44 @@ class AspectDataset(Dataset):
             sentence = t.cat(sentence, dim=0)
             return (sentence, self.entities[idx], self.attributes[idx])
 
+def dfToBinarySamplingDatasets(df, use_attributes, target_class, embeddings=None):
+    """ Expects as pandas.DataFrame with the columns: text, entity, attribute.
+    Creates an AspectDataset. Dicts are used to map the numeric values to their
+    names. If there are still rows with NaN values for the labels, they will be
+    filtered here. Uses the standard tokenizer.
+    Arguments:
+        df {pandas.DataFrame} -- Dataframe with the sentences and their aspects
+        use_attributes {bool} -- Whether to split the dataset on attributes or 
+            enitites
+        target_class {String} -- The wanted target to sample from. Wheter it
+            is an entitiy or attribute is denoted by use_attributes
+        embeddings {Flair.Embedding} -- Embeddings used in the Dataset
+    Returns:
+        {targetDataset: AspectDataset, otherDataset: AspectDataset} -- extracted 
+            datasets from the Dataframe. targetDataset only has samples form the
+            target_class. The other samples are all in otherDataset 
+    """
+    target_sentences = []
+    other_sentences = []
+    for row in df.itertuples():
+        if use_attributes:
+            row_class = row.attribute
+        else:
+            row_class = row.entity
+        if pd.notna(row_class):
+            if row_class == target_class:
+                target_sentences.append(Sentence(row.text, use_tokenizer=True))
+            else:
+                other_sentences.append(Sentence(row.text, use_tokenizer=True))
+        else:
+            if target_class != "NaN":
+                other_sentences.append(Sentence(row.text, use_tokenizer=True))
+            else:
+                target_sentences.append(Sentence(row.text, use_tokenizer=True))
+    target_class = torch.ones(len(target_sentences))
+    other_class = torch.zeros(len(other_sentences))
+    targetDataset = AspectDataset(target_sentences, target_class, {}, target_class, {}, embeddings)
+    otherDataset = AspectDataset(other_sentences, other_class, {}, other_class, {}, embeddings)
 
 def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
     """ Expects as pandas.DataFrame with the columns: text, entity, attribute.
@@ -67,9 +106,10 @@ def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
     Arguments:
         df {pandas.DataFrame} -- Dataframe with the sentences and their aspects
         entity_dict {dict(String, int)} -- mapping for entity names to their
-        numeric entity values
+            numeric entity values
         attribute_dict {dict(String, int)} -- mapping for attribute names to
-        their numeric values 
+            their numeric values 
+        embeddings {Flair.Embedding} -- Embeddings used in the Dataset
     Returns:
         {AspectDataset} -- extracted dataset from the 
     """
@@ -97,6 +137,12 @@ def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
 
 def collate(batch):
     sentences = [sample[0] for sample in batch]
+    entities = t.cat([sample[1] for sample in batch])
+    attributes = t.cat([sample[2] for sample in batch])
+    return sentences, entities, attributes
+
+def collate_padding(batch):
+    sentences = pad_sequence([sample[0] for sample in batch], batch_first=True)
     entities = t.cat([sample[1] for sample in batch])
     attributes = t.cat([sample[2] for sample in batch])
     return sentences, entities, attributes

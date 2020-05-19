@@ -10,7 +10,7 @@ class Model(nn.Module):
 
         Arguments:
             embedding_dim {int} -- variable for saving the size of the embeddings, 
-            used as the size for the attention matrix M as well
+                used as the size for the attention matrix M as well
             output_dim {int} -- output dimension of the models last layer (softmax)
         """
         super(Model, self).__init__()
@@ -25,11 +25,11 @@ class Model(nn.Module):
 
         Arguments:
             x {tensor [batch size, sentence length, embedding_dim]} -- tensor containing
-            one batch of data
+                one batch of data
 
         Returns:
             tensor [batch size, output_dim] -- softmax scores for each sentence
-            in the batch
+                in the batch
         """   
         average = self.average(x)
         attention_logit = self.attention_logit(average, self.attention_matrix)
@@ -59,3 +59,40 @@ class Model(nn.Module):
 
     def weighted_sum(self, weights, x):
         return t.sum(x * weights[:,:, None], dim=1)
+
+class Classification(nn.Module):
+
+    def __init__(self, input_dim, output_dim):
+        """ Initializes a classification layer. This can be used to 
+        identify which class belongs to which output of the previous
+        model. In a binary case this might not be necessary, but it
+        might be beneficial to use multidimensional inputs for better
+        coverage of the clusters. This module is used for a mapping
+        and should be trained after the other model finished training.
+        The non-linearity used is based on the output dimension:
+        1 = Sigmoid, 1 < n = Softmax
+        Arguments:
+            input_dim {int} -- Size of the output of the previous model
+            output_dim {int} -- Number of classes this model should 
+                predict
+        """
+        self.linear = nn.Linear(input_dim, output_dim)
+        if  output_dim > 1:
+            self.output = nn.Softmax()
+        else:
+            self.output = nn.Sigmoid()
+
+    def forward(self, x):
+        """Expects a batch of embedded sentences and produces the class
+            prediction for each of them.
+
+        Arguments:
+            x {tensor [batch size, input_dim]} -- tensor containing
+            one batch of data
+
+        Returns:
+            tensor [batch size, output_dim] -- classification scores 
+                for each sentence in the batch
+        """ 
+        x = self.linear(x)
+        return self.output(x)
