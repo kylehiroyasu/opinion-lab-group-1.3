@@ -1,4 +1,4 @@
-import torch as t
+import torch
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 from flair.data import Sentence
@@ -55,8 +55,8 @@ class AspectDataset(Dataset):
         else:
             sentence = self.sentences[idx]
             self.embeddings.embed(sentence)
-            sentence = [t.unsqueeze(token.embedding, dim=0) for token in sentence]
-            sentence = t.cat(sentence, dim=0)
+            sentence = [torch.unsqueeze(token.embedding, dim=0) for token in sentence]
+            sentence = torch.cat(sentence, dim=0)
             return (sentence, self.entities[idx], self.attributes[idx])
 
 def dfToBinarySamplingDatasets(df, use_attributes, target_class, embeddings=None):
@@ -119,12 +119,12 @@ def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
     for row in df.itertuples():
         if pd.notna(row.attribute) and pd.notna(row.entity):
             sentences.append(Sentence(row.text, use_tokenizer=True))
-            entities.append(t.tensor([entity_dict[row.entity]]))
-            attributes.append(t.tensor([attribute_dict[row.attribute]]))
+            entities.append(torch.tensor([entity_dict[row.entity]]))
+            attributes.append(torch.tensor([attribute_dict[row.attribute]]))
         else: 
             sentences.append(Sentence(row.text, use_tokenizer=True))
-            entities.append(t.tensor([entity_dict["NaN"]]))
-            attributes.append(t.tensor([attribute_dict["NaN"]]))
+            entities.append(torch.tensor([entity_dict["NaN"]]))
+            attributes.append(torch.tensor([attribute_dict["NaN"]]))
 
     entity_id_dict = {}
     attribute_id_dict = {}
@@ -137,12 +137,12 @@ def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
 
 def collate(batch):
     sentences = [sample[0] for sample in batch]
-    entities = t.cat([sample[1] for sample in batch])
-    attributes = t.cat([sample[2] for sample in batch])
+    entities = torch.cat([sample[1] for sample in batch])
+    attributes = torch.cat([sample[2] for sample in batch])
     return sentences, entities, attributes
 
 def collate_padding(batch):
     sentences = pad_sequence([sample[0] for sample in batch], batch_first=True)
-    entities = t.cat([sample[1] for sample in batch])
-    attributes = t.cat([sample[2] for sample in batch])
+    entities = torch.cat([sample[1] for sample in batch])
+    attributes = torch.cat([sample[2] for sample in batch])
     return sentences, entities, attributes
