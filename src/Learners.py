@@ -25,7 +25,7 @@ class Learner_Classification(nn.Module):
         Returns:
             loss: torch.tensor[1]
         """
-        return self.criterion(output,targets), output
+        return self.criterion(output,targets)
 
 
 class Learner_Clustering(Learner_Classification):

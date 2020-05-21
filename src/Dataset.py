@@ -14,10 +14,10 @@ class AspectDataset(Dataset):
         of labels or with "multiple" sentences with each one label 
         Arguments: 
             sentences {list of Flair.Sentence} -- Sentences used in this dataset
-            entities {list of int} -- the numeric values for the entity labels
+            entities {list of Tensor[]} -- the numeric values for the entity labels
             entity_dict {dict(int, String)} -- mapping for the numeric entity values to
             the corresponding name
-            attirbutes {list of int} -- numeric values for the attribute labels
+            attirbutes {list of Tensor[]} -- numeric values for the attribute labels
             attribute_dict {dict(int, String)} -- mapping for the numeric attribute values
             to the corresponding name
         """
@@ -37,6 +37,12 @@ class AspectDataset(Dataset):
             embeddings (flair.WordEmbeddings) -- used to convert the sentence to an embedding
         """
         self.embeddings = embeddings
+
+    def targetLengths(self):
+        """ Returns the length of the entity_dict and attribute_dict """
+        entity_length = len(self.entity_dict) if len(self.entity_dict) > 0 else 1
+        attribute_length = len(self.attribute_dict) if len(self.attribute_dict) > 0 else 1
+        return entity_length, attribute_length
 
     def __len__(self):
         return len(self.sentences)
@@ -93,10 +99,11 @@ def dfToBinarySamplingDatasets(df, use_attributes, target_class, embeddings=None
                 other_sentences.append(Sentence(row.text, use_tokenizer=True))
             else:
                 target_sentences.append(Sentence(row.text, use_tokenizer=True))
-    target_class = torch.ones(len(target_sentences))
-    other_class = torch.zeros(len(other_sentences))
+    target_class = [torch.tensor([1]) for _ in range(len(target_sentences))]
+    other_class = [torch.tensor([0]) for _ in range(len(other_sentences))]
     targetDataset = AspectDataset(target_sentences, target_class, {}, target_class, {}, embeddings)
     otherDataset = AspectDataset(other_sentences, other_class, {}, other_class, {}, embeddings)
+    return targetDataset, otherDataset
 
 def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
     """ Expects as pandas.DataFrame with the columns: text, entity, attribute.

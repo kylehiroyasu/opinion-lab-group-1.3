@@ -62,7 +62,7 @@ class Model(nn.Module):
 
 class Classification(nn.Module):
 
-    def __init__(self, input_dim, output_dim):
+    def __init__(self, previous_model, input_dim, output_dim):
         """ Initializes a classification layer. This can be used to 
         identify which class belongs to which output of the previous
         model. In a binary case this might not be necessary, but it
@@ -72,10 +72,13 @@ class Classification(nn.Module):
         The non-linearity used is based on the output dimension:
         1 = Sigmoid, 1 < n = Softmax
         Arguments:
+            previous_model {Model} -- the previously trained model
             input_dim {int} -- Size of the output of the previous model
             output_dim {int} -- Number of classes this model should 
                 predict
         """
+        super(Classification, self).__init__()
+        self.model = previous_model
         self.linear = nn.Linear(input_dim, output_dim)
         if  output_dim > 1:
             self.output = nn.Softmax()
@@ -94,5 +97,6 @@ class Classification(nn.Module):
             tensor [batch size, output_dim] -- classification scores 
                 for each sentence in the batch
         """ 
+        x = self.model(x)
         x = self.linear(x)
         return self.output(x)
