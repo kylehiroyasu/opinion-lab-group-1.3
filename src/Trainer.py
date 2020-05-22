@@ -82,7 +82,10 @@ class Trainer:
             self.other_validloader = DataLoader(other_val_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
-        self.learner_classification = Learner_Classification(nn.CrossEntropyLoss())
+        if self.binary_sampling:
+            self.learner_classification = Learner_Classification(nn.BCELoss())
+        else:
+            self.learner_classification = Learner_Classification(nn.CrossEntropyLoss())
         if self.param["use_kcl"]:
             self.learner_clustering = Learner_Clustering(KCL())
         else:
@@ -131,7 +134,7 @@ class Trainer:
             for param in self.model.parameters():
                 param.requires_grad = False
         self.only_supervised = True
-        self.model = Classification(self.model, self.param["output_dim"], self.param["output_dim"])
+        self.model = Classification(self.model, self.param["output_dim"], self.param["classification_dim"])
         model = self.train()
         self.only_supervised = False
         return model
@@ -211,7 +214,6 @@ class Trainer:
                 output.append(self.model(torch.unsqueeze(sentence, dim=0)))
             output = torch.cat(output, dim=0)
         
-        output = output.squeeze()
         if not self.only_supervised:
             similarity = Class2Simi(target)
             loss = self.learner_clustering.calculate_criterion(output, similarity)

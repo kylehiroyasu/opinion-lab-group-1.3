@@ -11,7 +11,7 @@ class Model(nn.Module):
         Arguments:
             embedding_dim {int} -- variable for saving the size of the embeddings, 
                 used as the size for the attention matrix M as well
-            output_dim {int} -- output dimension of the models last layer (softmax)
+            output_dim {int} -- output dimension of the models last layer (softmax/sigmoid)
         """
         super(Model, self).__init__()
         self.embedding_dim = embedding_dim
@@ -37,6 +37,8 @@ class Model(nn.Module):
         attention_weight = self.softmax(d)
         sentence_embedding = self.weighted_sum(attention_weight, x)
         z = self.linear(sentence_embedding)
+        if self.output_dim == 1:
+            return self.sigmoid(z)
         return self.softmax(z)
 
 
@@ -56,6 +58,9 @@ class Model(nn.Module):
         z = t.exp(d - t.max(d, dim=1)[0][:,None])
         softmax = z/(t.sum(z, dim=1)[:,None])
         return softmax
+
+    def sigmoid(self, d):
+        return 1/(1+t.exp(-d))
 
     def weighted_sum(self, weights, x):
         return t.sum(x * weights[:,:, None], dim=1)

@@ -99,8 +99,8 @@ def dfToBinarySamplingDatasets(df, use_attributes, target_class, embeddings=None
                 other_sentences.append(Sentence(row.text, use_tokenizer=True))
             else:
                 target_sentences.append(Sentence(row.text, use_tokenizer=True))
-    target_class = [torch.tensor([1]) for _ in range(len(target_sentences))]
-    other_class = [torch.tensor([0]) for _ in range(len(other_sentences))]
+    target_class = [torch.tensor([1.]) for _ in range(len(target_sentences))]
+    other_class = [torch.tensor([0.]) for _ in range(len(other_sentences))]
     targetDataset = AspectDataset(target_sentences, target_class, {}, target_class, {}, embeddings)
     otherDataset = AspectDataset(other_sentences, other_class, {}, other_class, {}, embeddings)
     return targetDataset, otherDataset
