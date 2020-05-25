@@ -36,7 +36,7 @@ restaurants_train = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[
 restaurants_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[3]))
 
 binary_sampling = False
-train_attributes = True
+train_attributes = False
 train_restaurant = True
 if binary_sampling:
     target_class = "GENERAL"
@@ -77,7 +77,7 @@ param = {
     "embedding_dim": hidden_dim,
     "output_dim": output_dim,
     "classification_dim": len(attributes if train_attributes else entities) if not binary_sampling else 1,
-    "epochs": 1000,
+    "epochs": 10,
     "lr": 0.005,
     "lr_decay_epochs": 350,
     "batch_size": 512,
@@ -88,7 +88,9 @@ param = {
     "use_kcl": False,
     "with_supervised": False,
     "use_micro_average": True,
-    "train_entities": True
+    "train_entities": True,
+    "save_training_records": True,
+    "records_data_path": 'records/'
 }
 
 if binary_sampling:
