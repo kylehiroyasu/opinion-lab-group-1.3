@@ -86,7 +86,7 @@ class Trainer:
             self.other_validloader = DataLoader(other_val_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
-        self.scheduler = StepLR(self.optimizer, step_size=5, gamma=0.7)
+        self.scheduler = StepLR(self.optimizer, step_size=100, gamma=0.25)
         if self.binary_sampling:
             self.learner_classification = Learner_Classification(nn.BCELoss())
         else:
@@ -123,7 +123,8 @@ class Trainer:
             eval_loss = eval_loss.to(torch.device('cpu'))
             log("Eval Loss:", eval_loss.item())
             # TODO How do we do the evaluation, if we are not in the supervised case? Assign output to majority label? Compute centroids?
-            self.scheduler.step()
+            if e < self.param["lr_decay_epochs"]:
+                self.scheduler.step()
         return self.model
 
     def train_classifier(self, freeze=True, new_param=None):
@@ -149,6 +150,8 @@ class Trainer:
         """ Normal training method used, if we want to predict multiple classes at once.
         The parameters for training are all stored in self.param
         """
+        aggregated_targets = []
+        aggregated_outputs = []
         loss = torch.zeros(1)
         for sentences, entities, attributes in self.dataloader:
             if self.param["train_entities"]:
@@ -160,7 +163,16 @@ class Trainer:
                 target = target.cuda()
 
             #TODO aggregate loss
-            loss += self.train_batch(sentences, target)
+            batch_loss, output = self.train_batch(sentences, target)
+            loss += batch_loss
+            aggregated_targets.append(target.to(torch.device('cpu')))
+            aggregated_outputs.append(output.to(torch.device('cpu')))
+        aggregated_targets = torch.cat(aggregated_targets)
+        aggregated_outputs = torch.cat(aggregated_outputs)
+        if self.param["with_supervised"] or self.only_supervised:
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs, 
+                                        micro_average=self.param["use_micro_average"])
+            log("Train", metrics)
         return loss
 
     def train_bs_epoch(self):
@@ -168,6 +180,8 @@ class Trainer:
         the problem to binary classification.
         The parameters for training are all stored in self.param
         """
+        aggregated_targets = []
+        aggregated_outputs = []
         loss = torch.zeros(1)
         for sentences, entities, attributes in self.dataloader:
             # After getting a batch from the other classes, simply append them to the current
@@ -181,14 +195,12 @@ class Trainer:
                 other_sentences_max_length = other_sentences.size()[1]
                 # We need to check which tensor needs additional padding before we can concatenate them
                 if sentences_max_length > other_sentences_max_length:
-                    new_size = other_sentences.size()
-                    new_size[1] = sentences_max_length
+                    new_size = other_sentences.size()[0], sentences_max_length, other_sentences.size()[2]
                     new_other = torch.zeros(new_size)
                     new_other[:,:other_sentences_max_length,:] = other_sentences
                     other_sentences = new_other
                 elif sentences_max_length < other_sentences_max_length:
-                    new_size = sentences.size()
-                    new_size[1] = other_sentences_max_length
+                    new_size = sentences.size()[0], other_sentences_max_length, sentences.size()[2]
                     new_sentences = torch.zeros(new_size)
                     new_sentences[:,:sentences_max_length,:] = sentences
                     sentences = new_sentences
@@ -204,7 +216,16 @@ class Trainer:
                 sentences = sentences.cuda()
                 target = target.cuda()
 
-            loss += self.train_batch(sentences, target)
+            batch_loss, output = self.train_batch(sentences, target)
+            loss += batch_loss
+            aggregated_targets.append(target.to(torch.device('cpu')))
+            aggregated_outputs.append(output.to(torch.device('cpu')))
+        aggregated_targets = torch.cat(aggregated_targets)
+        aggregated_outputs = torch.cat(aggregated_outputs)
+        if self.param["with_supervised"] or self.only_supervised:
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs, 
+                                        micro_average=self.param["use_micro_average"])
+            log("Train", metrics)
         return loss
 
     def train_batch(self, sentences, target):
@@ -230,7 +251,7 @@ class Trainer:
 
         loss.backward()
         self.optimizer.step()
-        return loss
+        return loss, output
 
     def eval_epoch(self):
         """ Evaluation of one epoch. """
@@ -253,7 +274,7 @@ class Trainer:
         if self.param["with_supervised"] or self.only_supervised:
             metrics = calculate_metrics(aggregated_targets, aggregated_outputs, 
                                         micro_average=self.param["use_micro_average"])
-            log(metrics)
+            log("Eval", metrics)
         return loss
 
     def eval_batch(self, sentences, target):
@@ -321,7 +342,7 @@ class Trainer:
         if self.param["with_supervised"] or self.only_supervised:
             metrics = calculate_metrics(aggregated_targets, aggregated_outputs, 
                                         micro_average=self.param["use_micro_average"])
-            log(metrics)
+            log("Eval", metrics)
         return loss
 
     def getOtherBatch(self, train):
@@ -363,8 +384,6 @@ def calculate_metrics(targets, predictions, micro_average=True):
     max_classes = max_classes.to(torch.device('cpu')).detach().numpy()
     targets = targets.to(torch.device('cpu')).detach().numpy()
     statistic = {}
-    for i in range(max_classes.shape[0]):
-        print("Target:", targets[i], "Prediction:", max_classes[i])
     average = "micro" if micro_average else "macro"
     statistic["f1"] = f1_score(targets, max_classes, average=average)
     statistic["recall"] = recall_score(targets, max_classes, average=average)

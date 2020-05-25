@@ -17,7 +17,8 @@ class Model(nn.Module):
         self.embedding_dim = embedding_dim
         self.output_dim = output_dim
         self.attention_matrix = t.rand((self.embedding_dim, self.embedding_dim), requires_grad=True)
-        self.linear = nn.Linear(embedding_dim, output_dim)
+        self.att_linear = nn.Linear(self.embedding_dim, self.embedding_dim, bias=False)
+        self.linear = nn.Linear(self.embedding_dim, self.output_dim)
 
     def forward(self, x):
         """Expects a batch of sentences and produces the softmax scores usable for
@@ -77,8 +78,6 @@ class Classification(nn.Module):
         might be beneficial to use multidimensional inputs for better
         coverage of the clusters. This module is used for a mapping
         and should be trained after the other model finished training.
-        The non-linearity used is based on the output dimension:
-        1 = Sigmoid, 1 < n = Softmax
         Arguments:
             previous_model {Model} -- the previously trained model
             input_dim {int} -- Size of the output of the previous model
@@ -88,10 +87,6 @@ class Classification(nn.Module):
         super(Classification, self).__init__()
         self.model = previous_model
         self.linear = nn.Linear(input_dim, output_dim)
-        if  output_dim > 1:
-            self.output = nn.Softmax()
-        else:
-            self.output = nn.Sigmoid()
 
     def forward(self, x):
         """Expects a batch of embedded sentences and produces the class
@@ -106,5 +101,5 @@ class Classification(nn.Module):
                 for each sentence in the batch
         """ 
         x = self.model(x)
-        x = self.linear(x)
-        return self.output(x)
+        return self.linear(x)
+        

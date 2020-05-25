@@ -2,7 +2,6 @@ import torch
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 from flair.data import Sentence
-
 import pandas as pd
 
 class AspectDataset(Dataset):
@@ -123,6 +122,8 @@ def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
     sentences = []
     entities = []
     attributes = []
+    #mask = df.entity.isin(["RESTAURANT", "SERVICE"])
+    #df = df[mask]
     for row in df.itertuples():
         if pd.notna(row.attribute) and pd.notna(row.entity):
             sentences.append(Sentence(row.text, use_tokenizer=True))

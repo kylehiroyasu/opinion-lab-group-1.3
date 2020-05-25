@@ -77,14 +77,15 @@ param = {
     "embedding_dim": hidden_dim,
     "output_dim": output_dim,
     "classification_dim": len(attributes if train_attributes else entities) if not binary_sampling else 1,
-    "epochs": 20,
-    "lr": 0.0005,
-    "batch_size": 256,
+    "epochs": 1000,
+    "lr": 0.005,
+    "lr_decay_epochs": 350,
+    "batch_size": 512,
     "use_padding": True,
     "validation_percentage": 0.1,
     "binary_sampling_percentage": 0.5,
     "cuda": True,
-    "use_kcl": True,
+    "use_kcl": False,
     "with_supervised": False,
     "use_micro_average": True,
     "train_entities": True
@@ -95,4 +96,4 @@ if binary_sampling:
 else:
     trainer = Trainer(train_dataset, param)
 model = trainer.train()
-model = trainer.train_classifier()
+model = trainer.train_classifier(freeze=False)
