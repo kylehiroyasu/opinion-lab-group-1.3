@@ -3,7 +3,9 @@ import math
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
+from torch.optim.lr_scheduler import StepLR
 import numpy as np
+from sklearn.metrics import f1_score, precision_score, recall_score 
 
 from Model import Model, Classification
 from Dataset import collate, collate_padding
@@ -65,11 +67,13 @@ class Trainer:
 
         verbose_training = verbose
 
-        train_dataset, validation_dataset = split_dataset(self.dataset, param["validation_percentage"])
+        train_dataset, validation_dataset = split_dataset(self.dataset, self.param["validation_percentage"])
         if self.binary_sampling:
-            other_train_dataset, other_val_dataset = split_dataset(self.other_dataset, param["validation_percentage"])
+            other_train_dataset, other_val_dataset = split_dataset(self.other_dataset, self.param["validation_percentage"])
 
-        if param["use_padding"]:
+        # Create the dataloaders for sampling, if we have the binary case we additionally intialize dataloaders for the 
+        # other classes
+        if self.param["use_padding"]:
             collate_fn = collate_padding
         else:
             collate_fn = collate
@@ -82,6 +86,7 @@ class Trainer:
             self.other_validloader = DataLoader(other_val_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
+        self.scheduler = StepLR(self.optimizer, step_size=5, gamma=0.7)
         if self.binary_sampling:
             self.learner_classification = Learner_Classification(nn.BCELoss())
         else:
@@ -93,7 +98,7 @@ class Trainer:
 
         if self.param["cuda"] and torch.cuda.is_available():
             log("Using GPU")
-            device = torch.device('cuda:0')
+            device = torch.device('cuda')
             self.model.to(device)
         else:
             log("Using CPU")
@@ -118,6 +123,7 @@ class Trainer:
             eval_loss = eval_loss.to(torch.device('cpu'))
             log("Eval Loss:", eval_loss.item())
             # TODO How do we do the evaluation, if we are not in the supervised case? Assign output to majority label? Compute centroids?
+            self.scheduler.step()
         return self.model
 
     def train_classifier(self, freeze=True, new_param=None):
@@ -167,7 +173,7 @@ class Trainer:
             # After getting a batch from the other classes, simply append them to the current
             # sentences. The error calculation is robust enough.
             other_sentences, other_entities, other_attributes = self.getOtherBatch(train=True)
-            # Combining the sample depends on wheter we used padding or not (=tensor vs list output of dataloader)
+            # Combining the sample depends on whether we used padding or not (=tensor vs list output of dataloader)
             if isinstance(sentences, list):
                 sentences += other_sentences
             else:
@@ -246,9 +252,8 @@ class Trainer:
         aggregated_outputs = torch.cat(aggregated_outputs)
         if self.param["with_supervised"] or self.only_supervised:
             metrics = calculate_metrics(aggregated_targets, aggregated_outputs, 
-                                        min_target=self.min_target, max_target=self.max_target,
                                         micro_average=self.param["use_micro_average"])
-            print(metrics)
+            log(metrics)
         return loss
 
     def eval_batch(self, sentences, target):
@@ -315,9 +320,8 @@ class Trainer:
         aggregated_outputs = torch.cat(aggregated_outputs)
         if self.param["with_supervised"] or self.only_supervised:
             metrics = calculate_metrics(aggregated_targets, aggregated_outputs, 
-                                        min_target=self.min_target, max_target=self.max_target,
                                         micro_average=self.param["use_micro_average"])
-            print(metrics)
+            log(metrics)
         return loss
 
     def getOtherBatch(self, train):
@@ -339,14 +343,12 @@ class Trainer:
         self.other_iterator = dataloader.__iter__()
         return self.other_iterator.__next__()
 
-def calculate_metrics(targets, predictions, min_target=0, max_target=1, micro_average=True):
+def calculate_metrics(targets, predictions, micro_average=True):
     """ Calculates common performance metrics. 
     Arguments:
         targets {torch.tensor[N]} -- The target values for a given sample.
         predictions {torch.tensor[N x output_dim]} -- The softmax/sigmoid output for
             that sample
-        min_target {int} -- the minimal possible class target
-        max_target {int} -- the maximal possible class target
         micro_average {bool} -- whether to use micro or macro averaging
     Returns:
         {dict{f1, recall, precision}}
@@ -358,36 +360,15 @@ def calculate_metrics(targets, predictions, min_target=0, max_target=1, micro_av
         max_classes = torch.round(predictions)
     else:
         max_classes = torch.argmax(predictions, dim=1)
-    counts = {}
-    for i in range(min_target, max_target+1):
-        counts[i] = {"TP":0, "FP":0, "TN": 0, "FN": 0}
     max_classes = max_classes.to(torch.device('cpu')).detach().numpy()
     targets = targets.to(torch.device('cpu')).detach().numpy()
-    # We want to go over each possible class in the sample and compute
-    # its individual true pos, true neg, false pos and false neg counts
-    for i in range(min_target, max_target+1):
-        counts[i]["TP"] += np.sum((targets == max_classes) & (targets == i))
-        counts[i]["FP"] += np.sum((max_classes == i) & (targets != i))
-        #TODO Does this really work like this with multiple targets?
-        counts[i]["TN"] += np.sum((max_classes != i) & (targets != i))
-        counts[i]["FN"] += np.sum((max_classes != i) & (targets == i))
     statistic = {}
-    if micro_average:
-        statistic["precision"] = sum([counts[i]["TP"] for i in range(min_target, max_target+1)]) 
-        statistic["precision"] /= sum([counts[i]["TP"]+counts[i]["FP"] for i in range(min_target, max_target+1)])
-        statistic["recall"] =  sum([counts[i]["TP"] for i in range(min_target, max_target+1)]) 
-        statistic["recall"] /= sum([counts[i]["TP"]+counts[i]["FN"] for i in range(min_target, max_target+1)])
-        statistic["f1"] = 2 * (statistic["precision"] * statistic["recall"])/(statistic["precision"] + statistic["recall"])
-    else:
-        statistic_per_class = {}
-        for i in range(min_target, max_target+1):
-            statistic_per_class[i] = {}
-            statistic_per_class[i]["precision"] = counts[i]["TP"] / (counts[i]["TP"] + counts[i]["FP"])
-            statistic_per_class[i]["recall"] = counts[i]["TP"] / (counts[i]["TP"] + counts[i]["FN"])
-            statistic_per_class[i]["f1"] = 2 * (statistic_per_class[i]["precision"] * statistic_per_class[i]["recall"]) 
-            statistic_per_class[i]["f1"] /= (statistic_per_class[i]["precision"] + statistic_per_class[i]["recall"])
-        for stat in ["precision", "recall", "f1"]:
-            statistic[stat] = sum([statistic_per_class[i][stat] for i in range(min_target, max_target+1)]) / (max_target-min_target+1)
+    for i in range(max_classes.shape[0]):
+        print("Target:", targets[i], "Prediction:", max_classes[i])
+    average = "micro" if micro_average else "macro"
+    statistic["f1"] = f1_score(targets, max_classes, average=average)
+    statistic["recall"] = recall_score(targets, max_classes, average=average)
+    statistic["precision"] = precision_score(targets, max_classes, average=average)
     return statistic
         
 def split_dataset(dataset, validation_percentage):

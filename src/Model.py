@@ -41,7 +41,10 @@ class Model(nn.Module):
             return self.sigmoid(z)
         return self.softmax(z)
 
-
+    def to(self, device):
+        super(Model, self).to(device)
+        self.attention_matrix = self.attention_matrix.to(device)
+        
     def average(self, x):
         return 1/(x.size()[1]) * t.sum(x, dim=1)
 

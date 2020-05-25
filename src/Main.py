@@ -35,7 +35,7 @@ laptops_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[1]))
 restaurants_train = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[2]))
 restaurants_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[3]))
 
-binary_sampling = True
+binary_sampling = False
 train_attributes = True
 train_restaurant = True
 if binary_sampling:
@@ -77,13 +77,13 @@ param = {
     "embedding_dim": hidden_dim,
     "output_dim": output_dim,
     "classification_dim": len(attributes if train_attributes else entities) if not binary_sampling else 1,
-    "epochs": 2,
-    "lr": 0.01,
+    "epochs": 20,
+    "lr": 0.0005,
     "batch_size": 256,
-    "use_padding": False,
+    "use_padding": True,
     "validation_percentage": 0.1,
     "binary_sampling_percentage": 0.5,
-    "cuda": False,
+    "cuda": True,
     "use_kcl": True,
     "with_supervised": False,
     "use_micro_average": True,
