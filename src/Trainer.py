@@ -235,16 +235,13 @@ class Trainer:
                 other_sentences_max_length = other_sentences.size()[1]
                 # We need to check which tensor needs additional padding before we can concatenate them
                 if sentences_max_length > other_sentences_max_length:
-                    new_size = other_sentences.size(
-                    )[0], sentences_max_length, other_sentences.size()[2]
-                    new_other = torch.zeros(new_size)
-                    new_other[:, :other_sentences_max_length,
-                              :] = other_sentences
+                    new_size = other_sentences.size()[0], sentences_max_length, other_sentences.size()[2]
+                    new_other = torch.zeros(new_size, device=other_sentences.device)
+                    new_other[:, :other_sentences_max_length,:] = other_sentences
                     other_sentences = new_other
                 elif sentences_max_length < other_sentences_max_length:
-                    new_size = sentences.size(
-                    )[0], other_sentences_max_length, sentences.size()[2]
-                    new_sentences = torch.zeros(new_size)
+                    new_size = sentences.size()[0], other_sentences_max_length, sentences.size()[2]
+                    new_sentences = torch.zeros(new_size, device=sentences.device)
                     new_sentences[:, :sentences_max_length, :] = sentences
                     sentences = new_sentences
                 sentences = torch.cat([sentences, other_sentences])
@@ -372,16 +369,13 @@ class Trainer:
                 other_sentences_max_length = other_sentences.size()[1]
                 # We need to check which tensor needs additional padding before we can concatenate them
                 if sentences_max_length > other_sentences_max_length:
-                    new_size = other_sentences.size()
-                    new_size[1] = sentences_max_length
-                    new_other = torch.zeros(new_size)
-                    new_other[:, :other_sentences_max_length,
-                              :] = other_sentences
+                    new_size = other_sentences.size()[0], sentences_max_length, other_sentences.size()[2]
+                    new_other = torch.zeros(new_size, device=other_sentences.device)
+                    new_other[:, :other_sentences_max_length,:] = other_sentences
                     other_sentences = new_other
                 elif sentences_max_length < other_sentences_max_length:
-                    new_size = sentences.size()
-                    new_size[1] = other_sentences_max_length
-                    new_sentences = torch.zeros(new_size)
+                    new_size = sentences.size()[0], other_sentences_max_length, sentences.size()[2]
+                    new_sentences = torch.zeros(new_size, device=sentences.device)
                     new_sentences[:, :sentences_max_length, :] = sentences
                     sentences = new_sentences
                 sentences = torch.cat([sentences, other_sentences])
@@ -467,7 +461,7 @@ def split_dataset(dataset, validation_percentage):
         validation_percentage {float} -- How much of the dataset shall be used for
             validation
     Returns:
-        {(train: Dataset, validation Dataset)}
+        {(train: Dataset, validation: Dataset)}
     """
     assert (validation_percentage >= 0 and validation_percentage <= 1)
     validation_length = math.ceil(len(dataset) * validation_percentage)

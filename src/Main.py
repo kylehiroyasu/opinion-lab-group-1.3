@@ -35,8 +35,8 @@ laptops_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[1]))
 restaurants_train = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[2]))
 restaurants_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[3]))
 
-binary_sampling = False
-train_attributes = False
+binary_sampling = True
+train_attributes = True
 train_restaurant = True
 if binary_sampling:
     target_class = "GENERAL"
@@ -70,6 +70,7 @@ else:
                                                                     target_class, embeddings)
     test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, train_attributes, 
                                                                     target_class, embeddings)
+print(len(train_dataset), len(other_train_dataset))
 
 print("Loaded dataset")
 
@@ -78,7 +79,7 @@ param = {
     "output_dim": output_dim,
     "classification_dim": len(attributes if train_attributes else entities) if not binary_sampling else 1,
     "epochs": 10,
-    "lr": 0.005,
+    "lr": 0.0005,
     "lr_decay_epochs": 350,
     "batch_size": 512,
     "use_padding": True,
