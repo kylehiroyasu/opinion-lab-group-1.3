@@ -69,6 +69,35 @@ class Model(nn.Module):
     def weighted_sum(self, weights, x):
         return t.sum(x * weights[:,:, None], dim=1)
 
+# Taken and adapted from Group 1.2. for comparison
+class LinModel(nn.Module):
+
+    def __init__(self, word_dim, output_dim):
+        super().__init__()
+
+        self.attention = nn.Linear(word_dim, 1, bias=False)
+        self.classifier = nn.Linear(word_dim, output_dim)
+        self.softmax = nn.Softmax()
+
+    def forward(self, x):
+        shape_len = len(x.shape)
+
+        # sum up word vectors weighted by their word-wise attention
+        attentions = self.attention(x)
+        x =  attentions * x
+        if shape_len == 3:
+            x = x.sum(axis=1)
+        elif shape_len == 2:
+            x = x.sum(axis=0)
+
+        # feed it to the classifier
+        x = self.classifier(x)
+
+        # apply softmax
+        x = self.softmax(x)
+
+        return x
+
 class Classification(nn.Module):
 
     def __init__(self, previous_model, input_dim, output_dim):
@@ -87,6 +116,9 @@ class Classification(nn.Module):
         super(Classification, self).__init__()
         self.model = previous_model
         self.linear = nn.Linear(input_dim, output_dim)
+        self.output_dim = output_dim
+        if self.output_dim == 1:
+            self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         """Expects a batch of embedded sentences and produces the class
@@ -101,5 +133,11 @@ class Classification(nn.Module):
                 for each sentence in the batch
         """ 
         x = self.model(x)
-        return self.linear(x)
+        x = self.linear(x)
+        if self.output_dim == 1:
+            x = self.sigmoid(x)
+        return x
+
+def save_model(model, path):
+    t.save(model.state_dict(), path)
         

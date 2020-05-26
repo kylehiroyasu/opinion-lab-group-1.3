@@ -12,11 +12,12 @@ from torch.optim.lr_scheduler import StepLR
 import numpy as np
 from sklearn.metrics import f1_score, precision_score, recall_score
 
-from Model import Model, Classification
+from Model import Model, LinModel, Classification
 from Dataset import collate, collate_padding
 from Loss import KCL, MCL, Class2Simi
 from Learners import Learner_Classification, Learner_Clustering
 
+# This parameters are not used. They are here just for reference
 param = {
     "embedding_dim": 100,
     "output_dim": 7,
@@ -54,7 +55,7 @@ class Trainer:
         self.other_dataset = other_dataset
         self.binary_sampling = self.other_dataset is not None
         self.param = param_dict
-        self.model = Model(
+        self.model = LinModel(
             self.param["embedding_dim"], self.param["output_dim"])
         # Next value is used for iterting through the other_dataset in binary_sampling,
         # see getOtherBatch()
@@ -295,8 +296,11 @@ class Trainer:
                 loss += self.learner_classification.calculate_criterion(
                     output, target)
         else:
-            loss = self.learner_classification.calculate_criterion(
-                output, target)
+            # We have to differentiate between the Binary case
+            if output.size()[1] == 1:
+                # In the binary case we need to add one dimension
+                target = target[:,None]
+            loss = self.learner_classification.calculate_criterion(output, target)
 
         loss.backward()
         self.optimizer.step()
@@ -349,6 +353,10 @@ class Trainer:
                 loss += self.learner_classification.calculate_criterion(
                     output, target)
         else:
+            # We have to differentiate between the Binary case
+            if output.size()[1] == 1:
+                # In the binary case we need to add one dimension
+                target = target[:,None]
             loss = self.learner_classification.calculate_criterion(
                 output, target)
         return loss, output

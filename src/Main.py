@@ -78,20 +78,20 @@ param = {
     "embedding_dim": hidden_dim,
     "output_dim": output_dim,
     "classification_dim": len(attributes if train_attributes else entities) if not binary_sampling else 1,
-    "epochs": 10,
+    "epochs": 600,
     "lr": 0.0005,
     "lr_decay_epochs": 350,
     "batch_size": 512,
     "use_padding": True,
     "validation_percentage": 0.1,
-    "binary_sampling_percentage": 0.5,
+    "binary_sampling_percentage": 1,
     "cuda": True,
     "use_kcl": False,
     "with_supervised": False,
     "use_micro_average": True,
     "train_entities": True,
     "save_training_records": True,
-    "records_data_path": 'records/'
+    "records_data_path": 'records/'+ ('restaurants/' if train_restaurant else 'laptop/') + ('attribute/' if train_attributes else 'entity/')
 }
 
 if binary_sampling:
@@ -99,4 +99,5 @@ if binary_sampling:
 else:
     trainer = Trainer(train_dataset, param)
 model = trainer.train()
-model = trainer.train_classifier(freeze=False)
+param["lr"] = 0.0005
+model = trainer.train_classifier(freeze=False, new_param=param)
