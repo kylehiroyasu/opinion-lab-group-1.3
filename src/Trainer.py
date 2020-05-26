@@ -35,7 +35,7 @@ class Trainer:
         self.dataset = dataset
         self.other_dataset = other_dataset
         self.param = param_dict
-        self.model = LinModel(
+        self.model = Model(
             self.param["embedding_dim"], self.param["output_dim"])
         # Next value is used for iterting through the other_dataset in binary_sampling,
         # see getOtherBatch()
@@ -78,7 +78,8 @@ class Trainer:
             other_val_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_padding)
 
         # Initialize the optimizer, Learning rate scheduler and the classification loss
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
+        #self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=self.param["lr"])
         self.scheduler = StepLR(self.optimizer, step_size=100, gamma=0.25)
         self.classification_loss = nn.BCELoss()
         
@@ -176,8 +177,7 @@ class Trainer:
         aggregated_outputs = torch.cat(aggregated_outputs)
         # Only if we are in the classification phase we can get metrics
         if self.only_supervised:
-            metrics = calculate_metrics(aggregated_targets, aggregated_outputs,
-                                        micro_average=self.param["use_micro_average"])
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs)
             log("Train", metrics)
             metrics.update({
                 'epoch': self.current_epoch,
@@ -234,8 +234,7 @@ class Trainer:
         aggregated_outputs = torch.cat(aggregated_outputs)
         # Only if we are in the classification case we can get metrics
         if self.only_supervised:
-            metrics = calculate_metrics(aggregated_targets, aggregated_outputs,
-                                        micro_average=self.param["use_micro_average"])
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs)
             log("Eval", metrics)
             metrics.update({
                 'epoch': self.current_epoch,
@@ -301,7 +300,7 @@ class Trainer:
         return self.other_iterator.__next__()
 
 
-def calculate_metrics(targets, predictions, micro_average=True):
+def calculate_metrics(targets, predictions):
     """ Calculates common performance metrics. 
     Arguments:
         targets {torch.tensor[N]} -- The target values for a given sample.
@@ -312,20 +311,15 @@ def calculate_metrics(targets, predictions, micro_average=True):
         {dict{f1, recall, precision}}
     """
     # If the output dimension is 1, we used the sigmoid function
-    used_sigmoid = predictions.size()[1] == 1
     # We want to compute for each prediction the argmax class -> for sigmoid
-    if used_sigmoid:
-        max_classes = torch.round(predictions)
-    else:
-        max_classes = torch.argmax(predictions, dim=1)
+    max_classes = torch.round(predictions)
     max_classes = max_classes.to(torch.device('cpu')).detach().numpy()
     targets = targets.to(torch.device('cpu')).detach().numpy()
     statistic = {}
-    average = "micro" if micro_average else "macro"
-    statistic["f1"] = f1_score(targets, max_classes, average=average)
-    statistic["recall"] = recall_score(targets, max_classes, average=average)
-    statistic["precision"] = precision_score(
-        targets, max_classes, average=average)
+    max_classes = np.squeeze(max_classes)
+    statistic["f1"] = f1_score(targets, max_classes)
+    statistic["recall"] = recall_score(targets, max_classes)
+    statistic["precision"] = precision_score(targets, max_classes)
     return statistic
 
 
