@@ -77,7 +77,7 @@ class LinModel(nn.Module):
 
         self.attention = nn.Linear(word_dim, 1, bias=False)
         self.classifier = nn.Linear(word_dim, output_dim)
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
         shape_len = len(x.shape)
@@ -100,7 +100,7 @@ class LinModel(nn.Module):
 
 class Classification(nn.Module):
 
-    def __init__(self, previous_model, input_dim, output_dim):
+    def __init__(self, previous_model, input_dim):
         """ Initializes a classification layer. This can be used to 
         identify which class belongs to which output of the previous
         model. In a binary case this might not be necessary, but it
@@ -115,10 +115,8 @@ class Classification(nn.Module):
         """
         super(Classification, self).__init__()
         self.model = previous_model
-        self.linear = nn.Linear(input_dim, output_dim)
-        self.output_dim = output_dim
-        if self.output_dim == 1:
-            self.sigmoid = nn.Sigmoid()
+        self.linear = nn.Linear(input_dim, 1)
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         """Expects a batch of embedded sentences and produces the class
@@ -134,8 +132,7 @@ class Classification(nn.Module):
         """ 
         x = self.model(x)
         x = self.linear(x)
-        if self.output_dim == 1:
-            x = self.sigmoid(x)
+        x = self.sigmoid(x)
         return x
 
 def save_model(model, path):

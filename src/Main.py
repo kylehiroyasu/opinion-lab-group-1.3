@@ -11,9 +11,9 @@ from flair.embeddings import WordEmbeddings, BertEmbeddings
 
 import preprocess
 from Trainer import Trainer
-from Dataset import AspectDataset, dfToDataset, dfToBinarySamplingDatasets, collate
+from Dataset import AspectDataset, dfToBinarySamplingDatasets, collate_padding
 from Model import Model
-from Learners import Learner_Classification, Learner_Clustering
+from Learners import Learner_Clustering
 from Loss import KCL, MCL, Class2Simi
 
 # Because we are in the source directory, we have to go one directory upwards
@@ -35,11 +35,9 @@ laptops_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[1]))
 restaurants_train = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[2]))
 restaurants_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[3]))
 
-binary_sampling = True
 train_attributes = True
 train_restaurant = True
-if binary_sampling:
-    target_class = "GENERAL"
+target_class = "GENERAL"
 
 laptop_entities = {"BATTERY": 0, "COMPANY": 1, "CPU": 2, "DISPLAY": 3, "FANS_COOLING": 4, "GRAPHICS": 5, "HARDWARE": 6, "HARD_DISC": 7, "KEYBOARD": 8, "LAPTOP": 9, "MEMORY": 10, "MOTHERBOARD": 11, "MOUSE": 12, "MULTIMEDIA_DEVICES": 13, "OPTICAL_DRIVES": 14, "OS": 15, "PORTS": 16, "POWER_SUPPLY": 17, "SHIPPING": 18, "SOFTWARE": 19, "SUPPORT": 20, "WARRANTY": 21, "NaN": 22}
 laptop_attributes = {"CONNECTIVITY": 0, "DESIGN_FEATURES": 1, "GENERAL": 2, "MISCELLANEOUS": 3, "OPERATION_PERFORMANCE": 4,"PORTABILITY": 5, "PRICE": 6, "QUALITY": 7, "USABILITY": 8, "NaN": 9}
@@ -62,42 +60,31 @@ hidden_dim = 100
 # This is the dimension of the output of the ABAE model, the classification model gets this as input
 # It does not need to be related to the number of classes etc.
 output_dim = len(attributes if train_attributes else entities)
-if not binary_sampling:
-    train_dataset = dfToDataset(train_set, entities, attributes, embeddings)
-    test_dataset = dfToDataset(test_set, entities, attributes, embeddings)
-else:
-    train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, train_attributes, 
-                                                                    target_class, embeddings)
-    test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, train_attributes, 
-                                                                    target_class, embeddings)
-print(len(train_dataset), len(other_train_dataset))
+
+train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, train_attributes, target_class, embeddings)
+test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, train_attributes, target_class, embeddings)
 
 print("Loaded dataset")
 
 param = {
     "embedding_dim": hidden_dim,
     "output_dim": output_dim,
-    "classification_dim": len(attributes if train_attributes else entities) if not binary_sampling else 1,
+    "classification_dim": 1,
     "epochs": 600,
     "lr": 0.0005,
     "lr_decay_epochs": 350,
     "batch_size": 512,
-    "use_padding": True,
     "validation_percentage": 0.1,
     "binary_sampling_percentage": 1,
     "cuda": True,
     "use_kcl": False,
-    "with_supervised": False,
     "use_micro_average": True,
     "train_entities": True,
-    "save_training_records": True,
+    "save_training_records": False,
     "records_data_path": 'records/'+ ('restaurants/' if train_restaurant else 'laptop/') + ('attribute/' if train_attributes else 'entity/')
 }
 
-if binary_sampling:
-    trainer = Trainer(train_dataset, param, other_train_dataset)
-else:
-    trainer = Trainer(train_dataset, param)
+trainer = Trainer(train_dataset, param, other_train_dataset)
 model = trainer.train()
 param["lr"] = 0.0005
 model = trainer.train_classifier(freeze=False, new_param=param)

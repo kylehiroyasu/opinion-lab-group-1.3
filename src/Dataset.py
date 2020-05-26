@@ -142,13 +142,6 @@ def dfToDataset(df, entity_dict, attribute_dict, embeddings=None):
         attribute_id_dict[value] = key
     return AspectDataset(sentences, entities, entity_id_dict, attributes, attribute_id_dict, embeddings)
 
-
-def collate(batch):
-    sentences = [sample[0] for sample in batch]
-    entities = torch.cat([sample[1] for sample in batch])
-    attributes = torch.cat([sample[2] for sample in batch])
-    return sentences, entities, attributes
-
 def collate_padding(batch):
     sentences = pad_sequence([sample[0] for sample in batch], batch_first=True)
     entities = torch.cat([sample[1] for sample in batch])

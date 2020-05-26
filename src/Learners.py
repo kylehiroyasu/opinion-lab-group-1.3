@@ -9,26 +9,10 @@ import torch as t
 import torch.nn as nn
 from Loss import PairEnum
 
-class Learner_Classification(nn.Module):
+class Learner_Clustering():
 
     def __init__(self, criterion):
-        super(Learner_Classification, self).__init__()
         self.criterion = criterion
-
-    def calculate_criterion(self, output, targets):
-        """ Calculates the loss of the NN.
-        Arguments:
-            output {torch.tensor[N x output_dim]} -- the outputs from
-            the last layer of the NN
-            targets {torch.tensor[N]} -- the corresponding targets 
-            for each output
-        Returns:
-            loss: torch.tensor[1]
-        """
-        return self.criterion(output,targets)
-
-
-class Learner_Clustering(Learner_Classification):
 
     def calculate_criterion(self, output, similarity, mask=None):
         """ Calculates the loss of the NN.
