@@ -55,10 +55,17 @@ def load_datasets(use_restaurant):
     test_set = preprocess.load_data_as_df(os.path.join(RAW_DATA, test_file))
     return train_set, test_set, entities, attributes
 
+def load_embeddings(name):
+    if name == 'glove':
+        embeddings = WordEmbeddings(name)
+    else:
+        embeddings = BertEmbeddings(name)
+    return embeddings
+        
 @plac.annotations(
     dataset=("Which dataset to use", "positional", None, str, ["restaurants", "laptop"]),
     label=("Which labels to use", "positional", None, str, ["entity", "attribute"]),
-    embedding=("Which type of embeddings should be used", "option", None, str, ['glove', 'bert']),
+    embedding=("Which type of embeddings should be used", "option", None, str, ['glove', 'bert-base-cased']),
     use_kcl=("Flag to indicat if KCL loss function should be used, otherwise MCL", "flag", None),
     binary=("Flag to if binary or multiclass model should be trained", "flag", "b"),
     binary_target_class=("Class to use as positive label in binary classifier setting", "option", "c", str, None),
@@ -69,8 +76,8 @@ def load_datasets(use_restaurant):
 def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='GENERAL', epochs=1000, lr=0.0005, cuda=False):
     use_attributes = label == 'attribute' 
     use_restaurant = dataset == 'restaurants'
-
-    embeddings = WordEmbeddings(embedding)
+    
+    embeddings = load_embeddings(embedding)
     embedding_dim = 100 if embedding == 'glove' else 3072
 
     #Loading data and correct labels
