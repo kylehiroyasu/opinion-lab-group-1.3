@@ -35,8 +35,10 @@ class Trainer:
         self.dataset = dataset
         self.other_dataset = other_dataset
         self.param = param_dict
-        self.model = Model(
-            self.param["embedding_dim"], self.param["output_dim"])
+        if param_dict["use_linmodel"]:
+            self.model = LinModel(self.param["embedding_dim"], self.param["output_dim"])
+        else:
+            self.model = Model(self.param["embedding_dim"], self.param["output_dim"])
         # Next value is used for iterting through the other_dataset in binary_sampling,
         # see getOtherBatch()
         self.use_train_iterator = True
@@ -80,7 +82,7 @@ class Trainer:
         # Initialize the optimizer, Learning rate scheduler and the classification loss
         #self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
         self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=self.param["lr"])
-        self.scheduler = StepLR(self.optimizer, step_size=100, gamma=0.25)
+        self.scheduler = StepLR(self.optimizer, step_size=120, gamma=0.1)
         self.classification_loss = nn.BCELoss()
         
         # Initiliaze the correct loss. This is wrapped by the learner object which takes care

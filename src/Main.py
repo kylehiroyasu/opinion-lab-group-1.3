@@ -35,9 +35,9 @@ laptops_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[1]))
 restaurants_train = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[2]))
 restaurants_test = preprocess.load_data_as_df(os.path.join(RAW_DATA, RAW_FILES[3]))
 
-train_attributes = True
+train_attributes = False
 train_restaurant = True
-target_class = "QUALITY"
+target_class = "AMBIENCE"
 
 laptop_entities = {"BATTERY": 0, "COMPANY": 1, "CPU": 2, "DISPLAY": 3, "FANS_COOLING": 4, "GRAPHICS": 5, "HARDWARE": 6, "HARD_DISC": 7, "KEYBOARD": 8, "LAPTOP": 9, "MEMORY": 10, "MOTHERBOARD": 11, "MOUSE": 12, "MULTIMEDIA_DEVICES": 13, "OPTICAL_DRIVES": 14, "OS": 15, "PORTS": 16, "POWER_SUPPLY": 17, "SHIPPING": 18, "SOFTWARE": 19, "SUPPORT": 20, "WARRANTY": 21, "NaN": 22}
 laptop_attributes = {"CONNECTIVITY": 0, "DESIGN_FEATURES": 1, "GENERAL": 2, "MISCELLANEOUS": 3, "OPERATION_PERFORMANCE": 4,"PORTABILITY": 5, "PRICE": 6, "QUALITY": 7, "USABILITY": 8, "NaN": 9}
@@ -55,7 +55,9 @@ else:
     entities = laptops_entities
     attributes = laptops_attributes
     
-embeddings = WordEmbeddings('glove')
+#embeddings = BertEmbeddings("bert-base-cased")
+#hidden_dim = 3072
+embeddings = WordEmbeddings("glove")
 hidden_dim = 100
 # This is the dimension of the output of the ABAE model, the classification model gets this as input
 # It does not need to be related to the number of classes etc.
@@ -69,9 +71,10 @@ print("Loaded dataset")
 param = {
     "embedding_dim": hidden_dim,
     "output_dim": output_dim,
+    "embeddings": "glove",
     "classification_dim": 1,
     "epochs": 500,
-    "lr": 5e-4,
+    "lr": 2.5e-6,
     "lr_decay_epochs": 350,
     "batch_size": 512,
     "validation_percentage": 0.1,
@@ -79,15 +82,18 @@ param = {
     "cuda": True,
     "use_kcl": False,
     "use_micro_average": True,
-    "train_entities": True,
+    "train_entities": not train_attributes,
     "target_class": target_class,
-    "freeze": True,
+    "freeze": False,
     "save_training_records": True,
+    "use_linmodel": True,
+    "switch_to_relu": False,
     "records_data_path": 'records/'+ ('restaurants/' if train_restaurant else 'laptop/') + ('attribute/' if train_attributes else 'entity/')
 }
 
 trainer = Trainer(train_dataset, param, other_train_dataset)
 model = trainer.train()
-param["lr"] = 0.0005
-param["batch_size"] = 52
+#param["lr"] = 0.05
+param["epochs"] = 500
+param["batch_size"] = 64
 model = trainer.train_classifier(freeze=param["freeze"], new_param=param)

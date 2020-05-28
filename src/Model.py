@@ -19,6 +19,7 @@ class Model(nn.Module):
         self.attention_matrix = t.rand((self.embedding_dim, self.embedding_dim), requires_grad=True)
         self.att_linear = nn.Linear(self.embedding_dim, self.embedding_dim, bias=False)
         self.linear = nn.Linear(self.embedding_dim, self.output_dim)
+        self.use_softmax = True
 
     def forward(self, x):
         """Expects a batch of sentences and produces the softmax scores usable for
@@ -38,9 +39,12 @@ class Model(nn.Module):
         attention_weight = self.softmax(d)
         sentence_embedding = self.weighted_sum(attention_weight, x)
         z = self.linear(sentence_embedding)
-        if self.output_dim == 1:
-            return self.sigmoid(z)
-        return self.softmax(z)
+        if self.use_softmax:
+            if self.output_dim == 1:
+                return self.sigmoid(z)
+            return self.softmax(z)
+        else:
+            return z
 
     def to(self, device):
         super(Model, self).to(device)
@@ -77,6 +81,7 @@ class LinModel(nn.Module):
 
         self.attention = nn.Linear(word_dim, 1, bias=False)
         self.classifier = nn.Linear(word_dim, output_dim)
+        self.use_softmax = True
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
@@ -94,7 +99,8 @@ class LinModel(nn.Module):
         x = self.classifier(x)
 
         # apply softmax
-        x = self.softmax(x)
+        if self.use_softmax:
+            x = self.softmax(x)
 
         return x
 
@@ -115,6 +121,8 @@ class Classification(nn.Module):
         """
         super(Classification, self).__init__()
         self.model = previous_model
+        self.model.use_softmax = True
+        self.relu = nn.ReLU()
         self.linear = nn.Linear(input_dim, 1)
         self.sigmoid = nn.Sigmoid()
 
@@ -131,6 +139,8 @@ class Classification(nn.Module):
                 for each sentence in the batch
         """ 
         x = self.model(x)
+        if not self.model.use_softmax:
+            x = self.relu(x)
         x = self.linear(x)
         x = self.sigmoid(x)
         return x
