@@ -13,9 +13,9 @@ from flair.embeddings import WordEmbeddings, BertEmbeddings
 
 import preprocess
 from Trainer import Trainer
-from Dataset import AspectDataset, dfToDataset, dfToBinarySamplingDatasets, collate
+from Dataset import AspectDataset, dfToBinarySamplingDatasets, collate_padding
 from Model import Model
-from Learners import Learner_Classification, Learner_Clustering
+from Learners import Learner_Clustering
 from Loss import KCL, MCL, Class2Simi
 
 # Because we are in the source directory, we have to go one directory upwards
@@ -29,7 +29,6 @@ RAW_FILES = [
     'ABSA16_Restaurants_Train_SB1.xml',
     'ABSA16_Restaurants_Test_SB1_GOLD.xml'
 ]
-
 
 LAPTOP_ENTITIES = {"BATTERY": 0, "COMPANY": 1, "CPU": 2, "DISPLAY": 3, "FANS_COOLING": 4, "GRAPHICS": 5, "HARDWARE": 6, "HARD_DISC": 7, "KEYBOARD": 8, "LAPTOP": 9, "MEMORY": 10, "MOTHERBOARD": 11, "MOUSE": 12, "MULTIMEDIA_DEVICES": 13, "OPTICAL_DRIVES": 14, "OS": 15, "PORTS": 16, "POWER_SUPPLY": 17, "SHIPPING": 18, "SOFTWARE": 19, "SUPPORT": 20, "WARRANTY": 21, "NaN": 22}
 LAPTOP_ATTRIBUTES = {"CONNECTIVITY": 0, "DESIGN_FEATURES": 1, "GENERAL": 2, "MISCELLANEOUS": 3, "OPERATION_PERFORMANCE": 4,"PORTABILITY": 5, "PRICE": 6, "QUALITY": 7, "USABILITY": 8, "NaN": 9}
@@ -133,5 +132,29 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
     model = trainer.train()
     model = trainer.train_classifier(freeze=False, new_param=param)
 
+old_param = {
+    "embedding_dim": hidden_dim,
+    "output_dim": output_dim,
+    "embeddings": "glove",
+    "classification_dim": 1,
+    "epochs": 500,
+    "lr": 2.5e-6,
+    "lr_decay_epochs": 350,
+    "batch_size": 512,
+    "validation_percentage": 0.1,
+    "binary_sampling_percentage": 1,
+    "cuda": True,
+    "use_kcl": False,
+    "use_micro_average": True,
+    "train_entities": not train_attributes,
+    "target_class": target_class,
+    "freeze": False,
+    "save_training_records": True,
+    "use_linmodel": True,
+    "switch_to_relu": False,
+    "records_data_path": 'records/'+ ('restaurants/' if train_restaurant else 'laptop/') + ('attribute/' if train_attributes else 'entity/')
+}
+    
 if __name__ == '__main__':
     print(plac.call(main))
+
