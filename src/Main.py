@@ -13,7 +13,7 @@ from flair.embeddings import WordEmbeddings, BertEmbeddings
 
 import preprocess
 from Trainer import Trainer
-from Dataset import AspectDataset, dfToBinarySamplingDatasets, collate_padding
+from Dataset import AspectDataset, dfToBinarySamplingDatasets, dfToDataset, collate_padding
 from Model import Model
 from Learners import Learner_Clustering
 from Loss import KCL, MCL, Class2Simi
@@ -72,7 +72,7 @@ def load_embeddings(name):
     lr=("Learning rate", "option", "lr", float, None),
     cuda=("Flag if cuda should be used", "flag", None)
 )
-def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='GENERAL', epochs=1000, lr=0.0005, cuda=False):
+def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='GENERAL', epochs=500, lr=0.0005, cuda=False):
     use_attributes = label == 'attribute' 
     use_restaurant = dataset == 'restaurants'
     
@@ -120,8 +120,12 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         "use_kcl": use_kcl,
         "with_supervised": False,
         "use_micro_average": True,
-        "train_entities": True,
+        "train_entities": not use_attributes,
+        "target_class": binary_target_class,
+        "freeze": False,
         "save_training_records": True,
+        "use_linmodel": True,
+        "switch_to_relu": False,
         "records_data_path": 'records/{}/{}/'.format(dataset, label)
     }
 
@@ -131,29 +135,6 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         trainer = Trainer(train_dataset, param)
     model = trainer.train()
     model = trainer.train_classifier(freeze=False, new_param=param)
-
-old_param = {
-    "embedding_dim": hidden_dim,
-    "output_dim": output_dim,
-    "embeddings": "glove",
-    "classification_dim": 1,
-    "epochs": 500,
-    "lr": 2.5e-6,
-    "lr_decay_epochs": 350,
-    "batch_size": 512,
-    "validation_percentage": 0.1,
-    "binary_sampling_percentage": 1,
-    "cuda": True,
-    "use_kcl": False,
-    "use_micro_average": True,
-    "train_entities": not train_attributes,
-    "target_class": target_class,
-    "freeze": False,
-    "save_training_records": True,
-    "use_linmodel": True,
-    "switch_to_relu": False,
-    "records_data_path": 'records/'+ ('restaurants/' if train_restaurant else 'laptop/') + ('attribute/' if train_attributes else 'entity/')
-}
     
 if __name__ == '__main__':
     print(plac.call(main))
