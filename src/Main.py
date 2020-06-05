@@ -12,7 +12,7 @@ from flair.data import Sentence
 from flair.embeddings import WordEmbeddings, BertEmbeddings
 
 import preprocess
-from Trainer import Trainer
+from Trainer import Trainer, MulticlassTrainer
 from Dataset import AspectDataset, dfToBinarySamplingDatasets, dfToDataset, collate_padding
 from Model import Model
 from Learners import Learner_Clustering
@@ -72,7 +72,7 @@ def load_embeddings(name):
     lr=("Learning rate", "option", "lr", float, None),
     cuda=("Flag if cuda should be used", "flag", None)
 )
-def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='GENERAL', epochs=500, lr=0.0005, cuda=False):
+def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=2, lr=0.00005, cuda=False):
     use_attributes = label == 'attribute' 
     use_restaurant = dataset == 'restaurants'
     
@@ -115,10 +115,12 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         "batch_size": 512,
         "use_padding": True,
         "validation_percentage": 0.1,
-        "binary_sampling_percentage": 1, # should this be 1???
+        "binary_sampling_percentage": 1,
         "cuda": cuda,
         "use_kcl": use_kcl,
         "with_supervised": False,
+        "patience_early_stopping": 5,
+        "save_model_path": 'models/{}/{}/'.format(dataset, label),
         "use_micro_average": True,
         "train_entities": not use_attributes,
         "target_class": binary_target_class,
@@ -132,7 +134,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
     if binary:
         trainer = Trainer(train_dataset, param, other_train_dataset)
     else:
-        trainer = Trainer(train_dataset, param)
+        trainer = MulticlassTrainer(train_dataset, param)
     model = trainer.train()
     model = trainer.train_classifier(freeze=False, new_param=param)
     

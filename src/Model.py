@@ -106,7 +106,7 @@ class LinModel(nn.Module):
 
 class Classification(nn.Module):
 
-    def __init__(self, previous_model, input_dim):
+    def __init__(self, previous_model, input_dim, output_dim=1):
         """ Initializes a classification layer. This can be used to 
         identify which class belongs to which output of the previous
         model. In a binary case this might not be necessary, but it
@@ -123,8 +123,11 @@ class Classification(nn.Module):
         self.model = previous_model
         self.model.use_softmax = True
         self.relu = nn.ReLU()
-        self.linear = nn.Linear(input_dim, 1)
-        self.sigmoid = nn.Sigmoid()
+        self.linear = nn.Linear(input_dim, output_dim)
+        if output_dim == 1:
+            self.sigmoid = nn.Sigmoid()
+        else:
+            self.sigmoid = nn.Softmax(dim=1)
 
     def forward(self, x):
         """Expects a batch of embedded sentences and produces the class
