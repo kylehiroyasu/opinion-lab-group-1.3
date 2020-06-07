@@ -104,6 +104,40 @@ class LinModel(nn.Module):
 
         return x
 
+
+class LinAvgModel(nn.Module):
+
+    def __init__(self, word_dim, output_dim):
+        super().__init__()
+
+        self.attention = nn.Linear(word_dim, word_dim, bias=False)
+        self.classifier = nn.Linear(word_dim, output_dim)
+        self.use_softmax = True
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        shape_len = len(x.shape)
+
+        # sum up word vectors weighted by their word-wise attention
+        attentions = self.attention(x)
+        average = 1/(x.size()[1]) * t.sum(x, dim=1)
+        attentions = torch.matmul(attentions, average.T)
+        x =  attentions * x
+        if shape_len == 3:
+            x = x.sum(axis=1)
+        elif shape_len == 2:
+            x = x.sum(axis=0)
+
+        # feed it to the classifier
+        x = self.classifier(x)
+
+        # apply softmax
+        if self.use_softmax:
+            x = self.softmax(x)
+
+        return x
+
+
 class Classification(nn.Module):
 
     def __init__(self, previous_model, input_dim, output_dim=1):

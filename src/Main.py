@@ -72,7 +72,7 @@ def load_embeddings(name):
     lr=("Learning rate", "option", "lr", float, None),
     cuda=("Flag if cuda should be used", "flag", None)
 )
-def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=2, lr=0.00005, cuda=False):
+def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=0.00005, cuda=False):
     use_attributes = label == 'attribute' 
     use_restaurant = dataset == 'restaurants'
     
@@ -84,7 +84,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
     # This is the dimension of the output of the ABAE model, the classification model gets this as input
     # It does not need to be related to the number of classes etc.
     output_dim = len(attributes if use_attributes else entities)
-    
+ 
     if binary:
         train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, use_attributes, 
                                                                         binary_target_class, embeddings)
@@ -119,7 +119,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         "cuda": cuda,
         "use_kcl": use_kcl,
         "with_supervised": False,
-        "patience_early_stopping": 5,
+        "patience_early_stopping": 10,
         "save_model_path": 'models/{}/{}/'.format(dataset, label),
         "use_micro_average": True,
         "train_entities": not use_attributes,
@@ -137,7 +137,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         trainer = MulticlassTrainer(train_dataset, param)
     model = trainer.train()
     model = trainer.train_classifier(freeze=False, new_param=param)
-    
+
 if __name__ == '__main__':
     print(plac.call(main))
 

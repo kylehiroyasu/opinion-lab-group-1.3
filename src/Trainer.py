@@ -86,7 +86,7 @@ class Trainer:
         # Initialize the optimizer, Learning rate scheduler and the classification loss
         #self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
         self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=self.param["lr"])
-        self.scheduler = StepLR(self.optimizer, step_size=120, gamma=0.1)
+        self.scheduler = StepLR(self.optimizer, step_size=1, gamma=0.1)
         self.classification_loss = nn.BCELoss()
         
         # Initiliaze the correct loss. This is wrapped by the learner object which takes care
@@ -138,19 +138,22 @@ class Trainer:
                 break
 
             # We might not want to decay the learning rate during the whole training
-            if e < self.param["lr_decay_epochs"]:
+            """if e < self.param["lr_decay_epochs"]:
+                self.scheduler.step()"""
+            if patience < 6:
                 self.scheduler.step()
 
             self.training_records.append(
                 {'epoch': e, 'model': self.model_name, 'loss': loss.item(), 'eval_loss': eval_loss.item()})
-        if self.param["save_training_records"]:
-            save_records(self.param['records_data_path'],
-                         self.filename, self.training_records)
         if self.param["save_model_path"] is not None:
             print("Reloading best model")
             self.model.load_state_dict(torch.load(self.model_path))
         if self.only_supervised:
             log("Best Scores:", self.best_train_f1, "Train F1", self.best_eval_f1, "Validation F1")
+            self.training_records.append({"train_f1": self.best_train_f1, "val_f1": self.best_eval_f1})
+        if self.param["save_training_records"]:
+            save_records(self.param['records_data_path'],
+                         self.filename, self.training_records)
         return self.model
 
     def train_classifier(self, freeze=True, new_param=None):
