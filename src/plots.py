@@ -59,7 +59,7 @@ def load_log(path):
             keys = list(log.keys())
             
             #organizing the logs based on keys and values
-            if keys == METADATA_KEYS:
+            if set(keys) >= set(METADATA_KEYS):
                 #saving all metadata as key value pairs
                 data.update(log)
             elif keys == LOSS_KEYS:
@@ -128,4 +128,5 @@ def plot_performance(df, difference, metric='f1'):
         plt.plot(eval_epochs, eval_perf, label='{} eval_{}'.format(differentiator, metric))
 
     plt.legend()
+    plt.title('{}-Scores Comparing {}'.format(metric, difference))
     plt.show()
