@@ -119,7 +119,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         "cuda": cuda,
         "use_kcl": use_kcl,
         "with_supervised": False,
-        "patience_early_stopping": 10,
+        "patience_early_stopping": 100,
         "save_model_path": 'models/{}/{}/'.format(dataset, label),
         "use_micro_average": True,
         "train_entities": not use_attributes,
