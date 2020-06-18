@@ -12,36 +12,17 @@ from torch.optim.lr_scheduler import StepLR
 import numpy as np
 from sklearn.metrics import f1_score, precision_score, recall_score
 
-from Model import Model, LinModel, Classification
-from Dataset import collate, collate_padding
+from Model import Model, LinModel, Classification, save_model
+from Dataset import collate_padding
 from Loss import KCL, MCL, Class2Simi
-from Learners import Learner_Classification, Learner_Clustering
-
-# This parameters are not used. They are here just for reference
-param = {
-    "embedding_dim": 100,
-    "output_dim": 7,
-    "epochs": 40,
-    "lr": 0.0025,
-    "batch_size": 256,
-    "use_padding": False,
-    "validation_percentage": 0.1,
-    "binary_sampling_percentage": 0.5,
-    "cuda": False,
-    "use_kcl": True,
-    "with_supervised": False,
-    "use_micro_average": True,
-    "train_entities": True,
-    "save_training_records": True,
-    "records_data_path": 'records/'
-}
+from Learners import Learner_Clustering
 
 verbose_training = True
 
 
 class Trainer:
 
-    def __init__(self, dataset, param_dict, other_dataset=None):
+    def __init__(self, dataset, param_dict, other_dataset):
         """ Initializes a Trainer object which will be used to optimize
         the neural network.
         Arguments:
@@ -53,25 +34,27 @@ class Trainer:
         """
         self.dataset = dataset
         self.other_dataset = other_dataset
-        self.binary_sampling = self.other_dataset is not None
         self.param = param_dict
-        self.model = LinModel(
-            self.param["embedding_dim"], self.param["output_dim"])
+        if param_dict["use_linmodel"]:
+            self.model = LinModel(self.param["embedding_dim"], self.param["output_dim"])
+        else:
+            self.model = Model(self.param["embedding_dim"], self.param["output_dim"])
         # Next value is used for iterting through the other_dataset in binary_sampling,
         # see getOtherBatch()
         self.use_train_iterator = True
         self.other_iterator = None
         # Use for the classification training afterwards
         self.only_supervised = False
-        entity_length, attribute_length = self.dataset.targetLengths()
-        self.min_target = 0
-        self.max_target = entity_length if self.param["train_entities"] else attribute_length
 
         self.filename = 'training_{}'.format(
             datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
         self.training_records = [self.param]
-        self.model_name = 'binary-abae' if self.binary_sampling else 'abae'
+        self.model_name = 'binary-abae'
+        if self.param["save_model_path"] is not None:
+            self.model_path = os.path.join(os.getcwd(), self.param["save_model_path"], self.filename)
         self.current_epoch = 0
+        self.best_train_f1 = 0.0
+        self.best_eval_f1 = 0.0
 
     def train(self, verbose=True):
         """ Starts the training procedure.
@@ -85,37 +68,29 @@ class Trainer:
 
         train_dataset, validation_dataset = split_dataset(
             self.dataset, self.param["validation_percentage"])
-        if self.binary_sampling:
-            other_train_dataset, other_val_dataset = split_dataset(
-                self.other_dataset, self.param["validation_percentage"])
+        other_train_dataset, other_val_dataset = split_dataset(
+            self.other_dataset, self.param["validation_percentage"])
 
-        # Create the dataloaders for sampling, if we have the binary case we additionally intialize dataloaders for the
+        # Create the dataloaders for sampling, as we use the binary case we additionally intialize dataloaders for the
         # other classes
-        if self.param["use_padding"]:
-            collate_fn = collate_padding
-        else:
-            collate_fn = collate
-
         self.dataloader = DataLoader(
-            train_dataset, batch_size=self.param["batch_size"], shuffle=True, collate_fn=collate_fn)
+            train_dataset, batch_size=self.param["batch_size"], shuffle=True, collate_fn=collate_padding)
         self.validloader = DataLoader(
-            validation_dataset, batch_size=self.param["batch_size"], collate_fn=collate_fn)
-        if self.binary_sampling:
-            batch_size = int(
-                round(self.param["batch_size"]*self.param["binary_sampling_percentage"]))
-            self.other_dataloader = DataLoader(
-                other_train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
-            self.other_validloader = DataLoader(
-                other_val_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+            validation_dataset, batch_size=self.param["batch_size"], collate_fn=collate_padding)
+        batch_size = int(round(self.param["batch_size"]*self.param["binary_sampling_percentage"]))
+        self.other_dataloader = DataLoader(
+            other_train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_padding)
+        self.other_validloader = DataLoader(
+            other_val_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_padding)
 
-        self.optimizer = torch.optim.Adam(
-            self.model.parameters(), lr=self.param["lr"])
-        self.scheduler = StepLR(self.optimizer, step_size=100, gamma=0.25)
-        if self.binary_sampling:
-            self.learner_classification = Learner_Classification(nn.BCELoss())
-        else:
-            self.learner_classification = Learner_Classification(
-                nn.CrossEntropyLoss())
+        # Initialize the optimizer, Learning rate scheduler and the classification loss
+        #self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=self.param["lr"])
+        self.scheduler = StepLR(self.optimizer, step_size=1, gamma=0.1)
+        self.classification_loss = nn.BCELoss()
+        
+        # Initiliaze the correct loss. This is wrapped by the learner object which takes care
+        # of all the similarity calculations
         if self.param["use_kcl"]:
             self.learner_clustering = Learner_Clustering(KCL())
         else:
@@ -130,31 +105,52 @@ class Trainer:
             self.param["cuda"] = False
             device = torch.device('cpu')
 
+        # The patience value will be used to determine whethter we want to stop the training early
+        # In each epoch with the validation error not decreasing patience will be decreased.
+        # If it as a zero, the training will be terminated.
+        patience = self.param["patience_early_stopping"]
+        best_eval_loss = torch.tensor(float('inf'))
+
         for e in range(self.param["epochs"]):
             self.current_epoch = e
             log("Epoch:", e)
+
+            # Start one training epoch and log the loss
             self.model.train()
-            if self.binary_sampling:
-                loss = self.train_bs_epoch()
-            else:
-                loss = self.train_epoch()
+            loss = self.train_epoch()
             loss = loss.to(torch.device('cpu'))
             log("Train loss:", loss.item())
 
+            # Start one evaluation epoch and log the loss
             self.model.eval()
-            if self.binary_sampling:
-                eval_loss = self.eval_bs_epoch()
-            else:
-                eval_loss = self.eval_epoch()
+            eval_loss = self.eval_epoch()
             eval_loss = eval_loss.to(torch.device('cpu'))
             log("Eval Loss:", eval_loss.item())
+            if eval_loss < best_eval_loss:
+                best_eval_loss = eval_loss
+                patience = self.param["patience_early_stopping"]
+                if self.param["save_model_path"] is not None:
+                    save_model(self.model, self.model_path)
+            else:
+                patience -= 1
+            log("Current patience:", patience)
+            if patience <= 0:
+                break
 
-            # TODO How do we do the evaluation, if we are not in the supervised case? Assign output to majority label? Compute centroids?
-            if e < self.param["lr_decay_epochs"]:
+            # We might not want to decay the learning rate during the whole training
+            """if e < self.param["lr_decay_epochs"]:
+                self.scheduler.step()"""
+            if patience < 6:
                 self.scheduler.step()
 
             self.training_records.append(
                 {'epoch': e, 'model': self.model_name, 'loss': loss.item(), 'eval_loss': eval_loss.item()})
+        if self.param["save_model_path"] is not None:
+            print("Reloading best model")
+            self.model.load_state_dict(torch.load(self.model_path))
+        if self.only_supervised:
+            log("Best Scores:", self.best_train_f1, "Train F1", self.best_eval_f1, "Validation F1")
+            self.training_records.append({"train_f1": self.best_train_f1, "val_f1": self.best_eval_f1})
         if self.param["save_training_records"]:
             save_records(self.param['records_data_path'],
                          self.filename, self.training_records)
@@ -175,47 +171,11 @@ class Trainer:
             for param in self.model.parameters():
                 param.requires_grad = False
         self.only_supervised = True
-        self.model = Classification(
-            self.model, self.param["output_dim"], self.param["classification_dim"])
+        self.model = Classification(self.model, self.param["output_dim"], self.param["classification_dim"])
         model = self.train()
-        self.only_supervised = False
         return model
 
     def train_epoch(self):
-        """ Normal training method used, if we want to predict multiple classes at once.
-        The parameters for training are all stored in self.param
-        """
-        aggregated_targets = []
-        aggregated_outputs = []
-        loss = torch.zeros(1)
-        for sentences, entities, attributes in self.dataloader:
-            if self.param["train_entities"]:
-                target = entities
-            else:
-                target = attributes
-            if self.param["cuda"]:
-                sentences = sentences.cuda()
-                target = target.cuda()
-
-            # TODO aggregate loss
-            batch_loss, output = self.train_batch(sentences, target)
-            loss += batch_loss
-            aggregated_targets.append(target.to(torch.device('cpu')))
-            aggregated_outputs.append(output.to(torch.device('cpu')))
-        aggregated_targets = torch.cat(aggregated_targets)
-        aggregated_outputs = torch.cat(aggregated_outputs)
-        if self.param["with_supervised"] or self.only_supervised:
-            metrics = calculate_metrics(aggregated_targets, aggregated_outputs,
-                                        micro_average=self.param["use_micro_average"])
-            log("Train", metrics)
-            metrics.update({
-                'epoch': self.current_epoch,
-                'step': 'train',
-                'model': self.model_name})
-            self.training_records.append(metrics)
-        return loss
-
-    def train_bs_epoch(self):
         """ Training method, if we want to only predict one class -> transformation of
         the problem to binary classification.
         The parameters for training are all stored in self.param
@@ -226,26 +186,8 @@ class Trainer:
         for sentences, entities, attributes in self.dataloader:
             # After getting a batch from the other classes, simply append them to the current
             # sentences. The error calculation is robust enough.
-            other_sentences, other_entities, other_attributes = self.getOtherBatch(
-                train=True)
-            # Combining the sample depends on whether we used padding or not (=tensor vs list output of dataloader)
-            if isinstance(sentences, list):
-                sentences += other_sentences
-            else:
-                sentences_max_length = sentences.size()[1]
-                other_sentences_max_length = other_sentences.size()[1]
-                # We need to check which tensor needs additional padding before we can concatenate them
-                if sentences_max_length > other_sentences_max_length:
-                    new_size = other_sentences.size()[0], sentences_max_length, other_sentences.size()[2]
-                    new_other = torch.zeros(new_size, device=other_sentences.device)
-                    new_other[:, :other_sentences_max_length,:] = other_sentences
-                    other_sentences = new_other
-                elif sentences_max_length < other_sentences_max_length:
-                    new_size = sentences.size()[0], other_sentences_max_length, sentences.size()[2]
-                    new_sentences = torch.zeros(new_size, device=sentences.device)
-                    new_sentences[:, :sentences_max_length, :] = sentences
-                    sentences = new_sentences
-                sentences = torch.cat([sentences, other_sentences])
+            other_sentences, other_entities, other_attributes = self.getOtherBatch(train=True)
+            sentences = self.fuze_sentences(sentences, other_sentences)
             entities = torch.cat([entities, other_entities])
             attributes = torch.cat([attributes, other_attributes])
 
@@ -263,9 +205,11 @@ class Trainer:
             aggregated_outputs.append(output.to(torch.device('cpu')))
         aggregated_targets = torch.cat(aggregated_targets)
         aggregated_outputs = torch.cat(aggregated_outputs)
-        if self.param["with_supervised"] or self.only_supervised:
-            metrics = calculate_metrics(aggregated_targets, aggregated_outputs,
-                                        micro_average=self.param["use_micro_average"])
+        # Only if we are in the classification phase we can get metrics
+        if self.only_supervised:
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs)
+            if metrics["f1"] > self.best_train_f1:
+                self.best_train_f1 = metrics["f1"]
             log("Train", metrics)
             metrics.update({
                 'epoch': self.current_epoch,
@@ -280,113 +224,31 @@ class Trainer:
         """
         self.optimizer.zero_grad()
 
-        if self.param["use_padding"]:
-            output = self.model(sentences)
-        else:
-            output = []
-            for sentence in sentences:
-                output.append(self.model(torch.unsqueeze(sentence, dim=0)))
-            output = torch.cat(output, dim=0)
+        output = self.model(sentences)
 
+        # only_supervised means we are training the classifier after the ABAE model
         if not self.only_supervised:
             similarity = Class2Simi(target)
             loss = self.learner_clustering.calculate_criterion(
                 output, similarity)
-            if self.param["with_supervised"]:
-                loss += self.learner_classification.calculate_criterion(
-                    output, target)
         else:
-            # We have to differentiate between the Binary case
-            if output.size()[1] == 1:
-                # In the binary case we need to add one dimension
-                target = target[:,None]
-            loss = self.learner_classification.calculate_criterion(output, target)
+            # In the binary case we need to add one dimension
+            loss = self.classification_loss(output, target[:,None])
 
         loss.backward()
         self.optimizer.step()
         return loss, output
 
     def eval_epoch(self):
-        """ Evaluation of one epoch. """
         aggregated_targets = []
         aggregated_outputs = []
-        for sentences, entities, attributes in self.validloader:
-            if self.param["train_entities"]:
-                target = entities
-            else:
-                target = attributes
-            if self.param["cuda"]:
-                sentences = sentences.cuda()
-                target = target.cuda()
-
-            loss, output = self.eval_batch(sentences, target)
-            aggregated_targets.append(target.to(torch.device('cpu')))
-            aggregated_outputs.append(output.to(torch.device('cpu')))
-        aggregated_targets = torch.cat(aggregated_targets)
-        aggregated_outputs = torch.cat(aggregated_outputs)
-        if self.param["with_supervised"] or self.only_supervised:
-            metrics = calculate_metrics(aggregated_targets, aggregated_outputs,
-                                        micro_average=self.param["use_micro_average"])
-            log("Eval", metrics)
-            metrics.update({
-                'epoch': self.current_epoch,
-                'step': 'eval',
-                'model': self.model_name})
-            self.training_records.append(metrics)
-        return loss
-
-    def eval_batch(self, sentences, target):
-        """ Evaluation of one batch. """
-        if self.param["use_padding"]:
-            output = self.model(sentences)
-        else:
-            output = []
-            for sentence in sentences:
-                output.append(self.model(torch.unsqueeze(sentence, dim=0)))
-            output = torch.cat(output, dim=0)
-
-        if not self.only_supervised:
-            similarity = Class2Simi(target)
-            loss = self.learner_clustering.calculate_criterion(
-                output, similarity)
-            if self.param["with_supervised"]:
-                loss += self.learner_classification.calculate_criterion(
-                    output, target)
-        else:
-            # We have to differentiate between the Binary case
-            if output.size()[1] == 1:
-                # In the binary case we need to add one dimension
-                target = target[:,None]
-            loss = self.learner_classification.calculate_criterion(
-                output, target)
-        return loss, output
-
-    def eval_bs_epoch(self):
-        aggregated_targets = []
-        aggregated_outputs = []
+        loss = torch.tensor(0.0)
         for sentences, entities, attributes in self.validloader:
             # After getting a batch from the other classes, simply append them to the current
             # sentences. The error calculation is robust enough.
-            other_sentences, other_entities, other_attributes = self.getOtherBatch(
-                train=False)
+            other_sentences, other_entities, other_attributes = self.getOtherBatch(train=False)
             # Combining the sample depends on wheter we used padding or not (=tensor vs list output of dataloader)
-            if isinstance(sentences, list):
-                sentences += other_sentences
-            else:
-                sentences_max_length = sentences.size()[1]
-                other_sentences_max_length = other_sentences.size()[1]
-                # We need to check which tensor needs additional padding before we can concatenate them
-                if sentences_max_length > other_sentences_max_length:
-                    new_size = other_sentences.size()[0], sentences_max_length, other_sentences.size()[2]
-                    new_other = torch.zeros(new_size, device=other_sentences.device)
-                    new_other[:, :other_sentences_max_length,:] = other_sentences
-                    other_sentences = new_other
-                elif sentences_max_length < other_sentences_max_length:
-                    new_size = sentences.size()[0], other_sentences_max_length, sentences.size()[2]
-                    new_sentences = torch.zeros(new_size, device=sentences.device)
-                    new_sentences[:, :sentences_max_length, :] = sentences
-                    sentences = new_sentences
-                sentences = torch.cat([sentences, other_sentences])
+            sentences = self.fuze_sentences(sentences, other_sentences)
             entities = torch.cat([entities, other_entities])
             attributes = torch.cat([attributes, other_attributes])
 
@@ -398,14 +260,17 @@ class Trainer:
                 sentences = sentences.cuda()
                 target = target.cuda()
 
-            loss, output = self.eval_batch(sentences, target)
+            batch_loss, output = self.eval_batch(sentences, target)
+            loss += batch_loss
             aggregated_targets.append(target.to(torch.device('cpu')))
             aggregated_outputs.append(output.to(torch.device('cpu')))
         aggregated_targets = torch.cat(aggregated_targets)
         aggregated_outputs = torch.cat(aggregated_outputs)
-        if self.param["with_supervised"] or self.only_supervised:
-            metrics = calculate_metrics(aggregated_targets, aggregated_outputs,
-                                        micro_average=self.param["use_micro_average"])
+        # Only if we are in the classification case we can get metrics
+        if self.only_supervised:
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs)
+            if metrics["f1"] > self.best_eval_f1:
+                self.best_eval_f1 = metrics["f1"]
             log("Eval", metrics)
             metrics.update({
                 'epoch': self.current_epoch,
@@ -413,6 +278,43 @@ class Trainer:
                 'model': self.model_name})
             self.training_records.append(metrics)
         return loss
+
+    def eval_batch(self, sentences, target):
+        """ Evaluation of one batch. """
+        output = self.model(sentences)
+
+        if not self.only_supervised:
+            similarity = Class2Simi(target)
+            loss = self.learner_clustering.calculate_criterion(
+                output, similarity)
+        else:
+            # In the binary case we need to add one dimension
+            loss = self.classification_loss(output, target[:,None])
+        return loss, output
+
+    def fuze_sentences(self, sentences, other_sentences):
+        """ Combines the sentences and other_sentences into one tensor, which has the maximum sentence
+        length as second dimension 
+        Arguments:
+            sentences {tensor[batch1, max_sentence_length, embedding_dim]}
+            other_sentences {tensor[batch2, max_other_sentence_length, embedding_dim]}
+        Returns:
+            {tensor[batch1+batch2, max(max_sentence_length, max_other_sentence_length), embedding_dim]}
+        """
+        sentences_max_length = sentences.size()[1]
+        other_sentences_max_length = other_sentences.size()[1]
+        # We need to check which tensor needs additional padding before we can concatenate them
+        if sentences_max_length > other_sentences_max_length:
+            new_size = other_sentences.size()[0], sentences_max_length, other_sentences.size()[2]
+            new_other = torch.zeros(new_size, device=other_sentences.device)
+            new_other[:, :other_sentences_max_length,:] = other_sentences
+            other_sentences = new_other
+        elif sentences_max_length < other_sentences_max_length:
+            new_size = sentences.size()[0], other_sentences_max_length, sentences.size()[2]
+            new_sentences = torch.zeros(new_size, device=sentences.device)
+            new_sentences[:, :sentences_max_length, :] = sentences
+            sentences = new_sentences
+        return torch.cat([sentences, other_sentences])
 
     def getOtherBatch(self, train):
         """ This method basically gives you the next batch of samples from the other classes
@@ -434,31 +336,223 @@ class Trainer:
         return self.other_iterator.__next__()
 
 
-def calculate_metrics(targets, predictions, micro_average=True):
+class MulticlassTrainer(Trainer):
+
+    def __init__(self, dataset, param_dict):
+        super(MulticlassTrainer, self).__init__(dataset, param_dict, None)
+
+    def train(self, verbose=True):
+        """ Starts the training procedure.
+        Arguments:
+            verbose {bool} -- Whether to log messages during training
+        Returns:
+            {Model} -- The trained model
+        """
+        verbose_training = verbose
+
+        train_dataset, validation_dataset = split_dataset(
+            self.dataset, self.param["validation_percentage"])
+
+        # Create the dataloaders for sampling, as we use the binary case we additionally intialize dataloaders for the
+        # other classes
+        self.dataloader = DataLoader(
+            train_dataset, batch_size=self.param["batch_size"], shuffle=True, collate_fn=collate_padding)
+        self.validloader = DataLoader(
+            validation_dataset, batch_size=self.param["batch_size"], collate_fn=collate_padding)
+
+        # Initialize the optimizer, Learning rate scheduler and the classification loss
+        #self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.param["lr"])
+        self.optimizer = torch.optim.RMSprop(self.model.parameters(), lr=self.param["lr"])
+        self.scheduler = StepLR(self.optimizer, step_size=120, gamma=0.1)
+        self.classification_loss = nn.CrossEntropyLoss()
+        
+        # Initiliaze the correct loss. This is wrapped by the learner object which takes care
+        # of all the similarity calculations
+        if self.param["use_kcl"]:
+            self.learner_clustering = Learner_Clustering(KCL())
+        else:
+            self.learner_clustering = Learner_Clustering(MCL())
+
+        if self.param["cuda"] and torch.cuda.is_available():
+            log("Using GPU")
+            device = torch.device('cuda')
+            self.model.to(device)
+        else:
+            log("Using CPU")
+            self.param["cuda"] = False
+            device = torch.device('cpu')
+
+        # The patience value will be used to determine whethter we want to stop the training early
+        # In each epoch with the validation error not decreasing patience will be decreased.
+        # If it as a zero, the training will be terminated.
+        patience = self.param["patience_early_stopping"]
+        best_eval_loss = torch.tensor(float('inf'))
+
+        for e in range(self.param["epochs"]):
+            self.current_epoch = e
+            log("Epoch:", e)
+
+            # Start one training epoch and log the loss
+            self.model.train()
+            loss = self.train_epoch()
+            loss = loss.to(torch.device('cpu'))
+            log("Train loss:", loss.item())
+
+            # Start one evaluation epoch and log the loss
+            self.model.eval()
+            eval_loss = self.eval_epoch()
+            eval_loss = eval_loss.to(torch.device('cpu'))
+            log("Eval Loss:", eval_loss.item())
+            if eval_loss < best_eval_loss:
+                best_eval_loss = eval_loss
+                patience = self.param["patience_early_stopping"]
+                if self.param["save_model_path"] is not None:
+                    save_model(self.model, self.model_path)
+            else:
+                patience -= 1
+            log("Current patience:", patience)
+            if patience <= 0:
+                break
+
+            # We might not want to decay the learning rate during the whole training
+            if e < self.param["lr_decay_epochs"]:
+                self.scheduler.step()
+
+            self.training_records.append(
+                {'epoch': e, 'model': self.model_name, 'loss': loss.item(), 'eval_loss': eval_loss.item()})
+        if self.param["save_training_records"]:
+            save_records(self.param['records_data_path'],
+                         self.filename, self.training_records)
+        if self.param["save_model_path"] is not None:
+            print("Reloading best model")
+            self.model.load_state_dict(torch.load(self.model_path))
+        if self.only_supervised:
+            log("Best Scores:", self.best_train_f1, "Train F1", self.best_eval_f1, "Validation F1")
+        return self.model
+
+    def train_epoch(self):
+        """ Training method, if we want to only predict one class -> transformation of
+        the problem to binary classification.
+        The parameters for training are all stored in self.param
+        """
+        aggregated_targets = []
+        aggregated_outputs = []
+        loss = torch.zeros(1)
+        for sentences, entities, attributes in self.dataloader:
+            if self.param["train_entities"]:
+                target = entities
+            else:
+                target = attributes
+            if self.param["cuda"]:
+                sentences = sentences.cuda()
+                target = target.cuda()
+
+            batch_loss, output = self.train_batch(sentences, target)
+            loss += batch_loss
+            aggregated_targets.append(target.to(torch.device('cpu')))
+            aggregated_outputs.append(output.to(torch.device('cpu')))
+        aggregated_targets = torch.cat(aggregated_targets)
+        aggregated_outputs = torch.cat(aggregated_outputs)
+        # Only if we are in the classification phase we can get metrics
+        if self.only_supervised:
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs, average='micro')
+            if metrics["f1"] > self.best_train_f1:
+                self.best_train_f1 = metrics["f1"]
+            log("Train", metrics)
+            metrics.update({
+                'epoch': self.current_epoch,
+                'step': 'train',
+                'model': self.model_name})
+            self.training_records.append(metrics)
+
+        return loss
+
+    def train_batch(self, sentences, target):
+        """ Training method for one data batch.
+        """
+        self.optimizer.zero_grad()
+
+        output = self.model(sentences)
+
+        # only_supervised means we are training the classifier after the ABAE model
+        if not self.only_supervised:
+            similarity = Class2Simi(target)
+            loss = self.learner_clustering.calculate_criterion(
+                output, similarity)
+        else:
+            loss = self.classification_loss(output, target)
+
+        loss.backward()
+        self.optimizer.step()
+        return loss, output
+
+    def eval_epoch(self):
+        aggregated_targets = []
+        aggregated_outputs = []
+        loss = torch.tensor(0.0)
+        for sentences, entities, attributes in self.validloader:
+            if self.param["train_entities"]:
+                target = entities
+            else:
+                target = attributes
+            if self.param["cuda"]:
+                sentences = sentences.cuda()
+                target = target.cuda()
+
+            batch_loss, output = self.eval_batch(sentences, target)
+            loss += batch_loss
+            aggregated_targets.append(target.to(torch.device('cpu')))
+            aggregated_outputs.append(output.to(torch.device('cpu')))
+        aggregated_targets = torch.cat(aggregated_targets)
+        aggregated_outputs = torch.cat(aggregated_outputs)
+        # Only if we are in the classification case we can get metrics
+        if self.only_supervised:
+            metrics = calculate_metrics(aggregated_targets, aggregated_outputs, average='micro')
+            if metrics["f1"] > self.best_eval_f1:
+                self.best_eval_f1 = metrics["f1"]
+            log("Eval", metrics)
+            metrics.update({
+                'epoch': self.current_epoch,
+                'step': 'eval',
+                'model': self.model_name})
+            self.training_records.append(metrics)
+        return loss
+
+    def eval_batch(self, sentences, target):
+        """ Evaluation of one batch. """
+        output = self.model(sentences)
+
+        if not self.only_supervised:
+            similarity = Class2Simi(target)
+            loss = self.learner_clustering.calculate_criterion(
+                output, similarity)
+        else:
+            loss = self.classification_loss(output, target)
+        return loss, output
+
+def calculate_metrics(targets, predictions, average='binary'):
     """ Calculates common performance metrics. 
     Arguments:
         targets {torch.tensor[N]} -- The target values for a given sample.
         predictions {torch.tensor[N x output_dim]} -- The softmax/sigmoid output for
             that sample
-        micro_average {bool} -- whether to use micro or macro averaging
+        average {String} -- Which score average to use. Possible: binary, micro, macro, samples
     Returns:
         {dict{f1, recall, precision}}
     """
     # If the output dimension is 1, we used the sigmoid function
-    used_sigmoid = predictions.size()[1] == 1
     # We want to compute for each prediction the argmax class -> for sigmoid
-    if used_sigmoid:
+    if predictions.size()[1] == 1:
         max_classes = torch.round(predictions)
     else:
         max_classes = torch.argmax(predictions, dim=1)
     max_classes = max_classes.to(torch.device('cpu')).detach().numpy()
     targets = targets.to(torch.device('cpu')).detach().numpy()
     statistic = {}
-    average = "micro" if micro_average else "macro"
+    max_classes = np.squeeze(max_classes)
     statistic["f1"] = f1_score(targets, max_classes, average=average)
     statistic["recall"] = recall_score(targets, max_classes, average=average)
-    statistic["precision"] = precision_score(
-        targets, max_classes, average=average)
+    statistic["precision"] = precision_score(targets, max_classes, average=average)
     return statistic
 
 

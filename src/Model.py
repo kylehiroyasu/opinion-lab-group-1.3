@@ -19,6 +19,7 @@ class Model(nn.Module):
         self.attention_matrix = t.rand((self.embedding_dim, self.embedding_dim), requires_grad=True)
         self.att_linear = nn.Linear(self.embedding_dim, self.embedding_dim, bias=False)
         self.linear = nn.Linear(self.embedding_dim, self.output_dim)
+        self.use_softmax = True
 
     def forward(self, x):
         """Expects a batch of sentences and produces the softmax scores usable for
@@ -38,9 +39,12 @@ class Model(nn.Module):
         attention_weight = self.softmax(d)
         sentence_embedding = self.weighted_sum(attention_weight, x)
         z = self.linear(sentence_embedding)
-        if self.output_dim == 1:
-            return self.sigmoid(z)
-        return self.softmax(z)
+        if self.use_softmax:
+            if self.output_dim == 1:
+                return self.sigmoid(z)
+            return self.softmax(z)
+        else:
+            return z
 
     def to(self, device):
         super(Model, self).to(device)
@@ -77,7 +81,8 @@ class LinModel(nn.Module):
 
         self.attention = nn.Linear(word_dim, 1, bias=False)
         self.classifier = nn.Linear(word_dim, output_dim)
-        self.softmax = nn.Softmax()
+        self.use_softmax = True
+        self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
         shape_len = len(x.shape)
@@ -94,13 +99,48 @@ class LinModel(nn.Module):
         x = self.classifier(x)
 
         # apply softmax
-        x = self.softmax(x)
+        if self.use_softmax:
+            x = self.softmax(x)
 
         return x
 
+
+class LinAvgModel(nn.Module):
+
+    def __init__(self, word_dim, output_dim):
+        super().__init__()
+
+        self.attention = nn.Linear(word_dim, word_dim, bias=False)
+        self.classifier = nn.Linear(word_dim, output_dim)
+        self.use_softmax = True
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        shape_len = len(x.shape)
+
+        # sum up word vectors weighted by their word-wise attention
+        attentions = self.attention(x)
+        average = 1/(x.size()[1]) * t.sum(x, dim=1)
+        attentions = torch.matmul(attentions, average.T)
+        x =  attentions * x
+        if shape_len == 3:
+            x = x.sum(axis=1)
+        elif shape_len == 2:
+            x = x.sum(axis=0)
+
+        # feed it to the classifier
+        x = self.classifier(x)
+
+        # apply softmax
+        if self.use_softmax:
+            x = self.softmax(x)
+
+        return x
+
+
 class Classification(nn.Module):
 
-    def __init__(self, previous_model, input_dim, output_dim):
+    def __init__(self, previous_model, input_dim, output_dim=1):
         """ Initializes a classification layer. This can be used to 
         identify which class belongs to which output of the previous
         model. In a binary case this might not be necessary, but it
@@ -115,10 +155,13 @@ class Classification(nn.Module):
         """
         super(Classification, self).__init__()
         self.model = previous_model
+        self.model.use_softmax = True
+        self.relu = nn.ReLU()
         self.linear = nn.Linear(input_dim, output_dim)
-        self.output_dim = output_dim
-        if self.output_dim == 1:
+        if output_dim == 1:
             self.sigmoid = nn.Sigmoid()
+        else:
+            self.sigmoid = nn.Softmax(dim=1)
 
     def forward(self, x):
         """Expects a batch of embedded sentences and produces the class
@@ -133,9 +176,10 @@ class Classification(nn.Module):
                 for each sentence in the batch
         """ 
         x = self.model(x)
+        if not self.model.use_softmax:
+            x = self.relu(x)
         x = self.linear(x)
-        if self.output_dim == 1:
-            x = self.sigmoid(x)
+        x = self.sigmoid(x)
         return x
 
 def save_model(model, path):
