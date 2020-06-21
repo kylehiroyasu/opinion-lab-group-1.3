@@ -83,6 +83,25 @@ def dfToBinarySamplingDatasets(df, use_attributes, target_class, embeddings=None
     """
     target_sentences = []
     other_sentences = []
+    if use_attributes:
+        if target_class != "NaN":
+            target_df = df[df.attribute == target_class]
+        else:
+            target_df = df[df.attribute.isna()]
+        target_df = target_df.drop_duplicates("text")
+        target_text = target_df.text
+        other_df = df[~df.text.isin(target_text.tolist())]
+        other_df = other_df.drop_duplicates("text")
+    else:
+        if target_class != "NaN":
+            target_df = df[df.entity == target_class]
+        else:
+            target_df = df[df.entity.isna()]
+        target_df = target_df.drop_duplicates("text")
+        target_text = target_df.text
+        other_df = df[~df.text.isin(target_text.tolist())]
+        other_df = other_df.drop_duplicates("text")
+    df = pd.concat([target_df, other_df])
     for row in df.itertuples():
         if use_attributes:
             row_class = row.attribute
