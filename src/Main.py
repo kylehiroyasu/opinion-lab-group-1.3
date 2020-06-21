@@ -12,7 +12,7 @@ from flair.data import Sentence
 from flair.embeddings import WordEmbeddings, BertEmbeddings
 
 import preprocess
-from Trainer import Trainer, MulticlassTrainer
+from Trainer import Trainer, MulticlassTrainer, RandomSamplingTrainer
 from Dataset import AspectDataset, dfToBinarySamplingDatasets, dfToDataset, collate_padding
 from Model import Model
 from Learners import Learner_Clustering
@@ -68,11 +68,12 @@ def load_embeddings(name):
     use_kcl=("Flag to indicat if KCL loss function should be used, otherwise MCL", "flag", None),
     binary=("Flag to if binary or multiclass model should be trained", "flag", "b"),
     binary_target_class=("Class to use as positive label in binary classifier setting", "option", "c", str, None),
+    random_sampling=("Use random sampling strategy", "flag", "s"),
     epochs=("The number of epoch to train with", "option", "e", int, None),
     lr=("Learning rate", "option", "lr", float, None),
     cuda=("Flag if cuda should be used", "flag", None)
 )
-def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=0.00005, cuda=False):
+def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=0.00005, cuda=False, random_sampling=False):
     use_attributes = label == 'attribute' 
     use_restaurant = dataset == 'restaurants'
     
@@ -91,6 +92,21 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, use_attributes, 
                                                                         binary_target_class, embeddings)
         print(len(train_dataset), len(other_train_dataset))
+
+        if random_sampling:
+            train_dataset = AspectDataset(train_dataset.sentences+other_train_dataset.sentences,
+                train_dataset.entities+other_train_dataset.entities, 
+                {}, 
+                train_dataset.attributes+other_train_dataset.attributes, 
+                {}, 
+                embeddings)
+
+            test_dataset = AspectDataset(test_dataset.sentences+other_test_dataset.sentences, 
+                test_dataset.entities+other_test_dataset.entities, 
+                {}, 
+                test_dataset.attributes+other_test_dataset.attributes, 
+                {}, 
+                embeddings)
     else:
         train_dataset = dfToDataset(train_set, entities, attributes, embeddings)
         test_dataset = dfToDataset(test_set, entities, attributes, embeddings)
@@ -106,6 +122,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         "embedding": embedding,
         "binary":binary,
         "binary_target_class": binary_target_class,
+        "random_sampling": random_sampling,
         "embedding_dim": embedding_dim,
         "output_dim": output_dim,
         "classification_dim": len(attributes if use_attributes else entities) if not binary else 1,
@@ -133,6 +150,8 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
 
     if binary:
         trainer = Trainer(train_dataset, param, other_train_dataset)
+        if random_sampling:
+            trainer = RandomSamplingTrainer(train_dataset, param)
     else:
         trainer = MulticlassTrainer(train_dataset, param)
     model = trainer.train()
