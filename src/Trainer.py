@@ -171,7 +171,7 @@ class Trainer:
             for param in self.model.parameters():
                 param.requires_grad = False
         self.only_supervised = True
-        self.model = Classification(self.model, self.param["output_dim"], self.param["classification_dim"])
+        self.model = Classification(self.model, self.param["output_dim"], self.param["classification_dim"], self.param["activation"])
         model = self.train()
         return model
 

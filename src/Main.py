@@ -72,71 +72,75 @@ def load_embeddings(name):
     lr=("Learning rate", "option", "lr", float, None),
     cuda=("Flag if cuda should be used", "flag", None)
 )
-def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=0.00005, cuda=False):
+def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=5e-5, cuda=False):
     use_attributes = label == 'attribute' 
     use_restaurant = dataset == 'restaurants'
     
     embeddings = load_embeddings(embedding)
     embedding_dim = 100 if embedding == 'glove' else 3072
 
+
     #Loading data and correct labels
     train_set, test_set, entities, attributes = load_datasets(use_restaurant)
     # This is the dimension of the output of the ABAE model, the classification model gets this as input
     # It does not need to be related to the number of classes etc.
     output_dim = len(attributes if use_attributes else entities)
- 
-    if binary:
-        train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, use_attributes, 
-                                                                        binary_target_class, embeddings)
-        test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, use_attributes, 
-                                                                        binary_target_class, embeddings)
-        print(len(train_dataset), len(other_train_dataset))
-    else:
-        train_dataset = dfToDataset(train_set, entities, attributes, embeddings)
-        test_dataset = dfToDataset(test_set, entities, attributes, embeddings)
-        print(len(train_dataset))
 
-    print("Loaded dataset")
-    
+    for activation in ["relu", "tanh", "sigmoid", "softmax"]:
+        if binary:
+            train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, use_attributes, 
+                                                                            binary_target_class, embeddings)
+            test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, use_attributes, 
+                                                                            binary_target_class, embeddings)
+            print(len(train_dataset), len(other_train_dataset))
+        else:
+            train_dataset = dfToDataset(train_set, entities, attributes, embeddings)
+            test_dataset = dfToDataset(test_set, entities, attributes, embeddings)
+            print(len(train_dataset))
+
+        print("Loaded dataset")
+        
 
 
-    param = {
-        "dataset":dataset,
-        "label": label,
-        "embedding": embedding,
-        "binary":binary,
-        "binary_target_class": binary_target_class,
-        "embedding_dim": embedding_dim,
-        "output_dim": output_dim,
-        "classification_dim": len(attributes if use_attributes else entities) if not binary else 1,
-        "epochs": epochs,
-        "lr": lr,
-        "lr_decay_epochs": 350,
-        "batch_size": 512,
-        "use_padding": True,
-        "validation_percentage": 0.1,
-        "binary_sampling_percentage": 1,
-        "cuda": cuda,
-        "use_kcl": use_kcl,
-        "with_supervised": False,
-        "patience_early_stopping": 100,
-        "save_model_path": 'models/{}/{}/'.format(dataset, label),
-        "use_micro_average": True,
-        "train_entities": not use_attributes,
-        "target_class": binary_target_class,
-        "freeze": False,
-        "save_training_records": True,
-        "use_linmodel": True,
-        "switch_to_relu": False,
-        "records_data_path": 'records/{}/{}/'.format(dataset, label)
-    }
+        param = {
+            "dataset":dataset,
+            "label": label,
+            "embedding": embedding,
+            "binary":binary,
+            "binary_target_class": binary_target_class,
+            "embedding_dim": embedding_dim,
+            "output_dim": output_dim,
+            "classification_dim": len(attributes if use_attributes else entities) if not binary else 1,
+            "epochs": epochs,
+            "lr": lr,
+            "lr_decay_epochs": 350,
+            "batch_size": 512,
+            "use_padding": True,
+            "validation_percentage": 0.1,
+            "binary_sampling_percentage": 1,
+            "cuda": cuda,
+            "use_kcl": use_kcl,
+            "with_supervised": False,
+            "patience_early_stopping": 100,
+            "save_model_path": 'models/{}/{}/'.format(dataset, label),
+            "use_micro_average": True,
+            "train_entities": not use_attributes,
+            "target_class": binary_target_class,
+            "freeze": False,
+            "save_training_records": True,
+            "use_linmodel": True,
+            "switch_to_relu": False,
+            "activation": activation,
+            "records_data_path": 'records/{}/{}/'.format(dataset, label)
+        }
+        print(param)
 
-    if binary:
-        trainer = Trainer(train_dataset, param, other_train_dataset)
-    else:
-        trainer = MulticlassTrainer(train_dataset, param)
-    model = trainer.train()
-    model = trainer.train_classifier(freeze=False, new_param=param)
+        if binary:
+            trainer = Trainer(train_dataset, param, other_train_dataset)
+        else:
+            trainer = MulticlassTrainer(train_dataset, param)
+        model = trainer.train()
+        model = trainer.train_classifier(freeze=False, new_param=param)
 
 if __name__ == '__main__':
     print(plac.call(main))
