@@ -218,37 +218,60 @@ def calculate_lr_statistics(df, difference, metric='f1', pretraining=False, subp
     labels = []
     color = []
     difference_values = train_df[difference].unique()
+    lr_values = [5e-7, 5e-6, 5e-5]
     try:
+        reduce_length = 0
+        lr_index = 0
         for value in difference_values:
+            if value == 5e-4:
+                reduce_length += 1
+                break
+            while lr_index < len(lr_values) and lr_values[lr_index] < value:
+                data.append([])
+                labels.append(lr_values[lr_index])
+                color.append(['lightskyblue', 'blue'])
+                lr_index += 1
             train = train_df[train_df[difference] == value].f1.tolist()
             data.append(train)
             labels.append(str(value))
             color.append(['lightskyblue', 'blue'])
-        for i in range(len(difference_values), 4):
+            lr_index += 1
+        for i in range(len(difference_values)-reduce_length, 3):
             data.append([])
-            labels.append("")
+            labels.append(lr_values[i])
             color.append(['lightskyblue', 'blue'])
     except TypeError:
         if difference == "lr":
-            r = 4
+            r = len(lr_values)
         for _ in range(r):
             data.append([])
             labels.append("")
             color.append(['lightskyblue', 'blue'])
     try:
+        reduce_length = 0
+        lr_index = 0
         difference_values = eval_df[difference].unique()
         for value in difference_values:
+            if value == 5e-4:
+                reduce_length += 1
+                break
+            while lr_index < len(lr_values) and lr_values[lr_index] < value:
+                data.append([])
+                labels.append(lr_values[lr_index])
+                color.append(['tomato', 'red'])
+                lr_index += 1
             eval = eval_df[eval_df[difference] == value].f1.tolist()
             data.append(eval)
             labels.append(str(value))
             color.append(['tomato', 'red'])
-        for i in range(len(difference_values), 4):
+            lr_index += 1
+        for i in range(len(difference_values)-reduce_length, 3):
             data.append([])
-            labels.append("")
+            labels.append(lr_values[i])
             color.append(['tomato', 'red'])
     except TypeError:
         if difference == "lr" and not selection['train_entities']:
-            r = 4
+            r = len(lr_values)
         else:
             r = 2
         for _ in range(r):
