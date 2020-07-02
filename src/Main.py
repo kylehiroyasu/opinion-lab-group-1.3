@@ -126,7 +126,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
             "use_micro_average": True,
             "train_entities": not use_attributes,
             "target_class": binary_target_class,
-            "freeze": False,
+            "freeze": True,
             "save_training_records": True,
             "use_linmodel": True,
             "switch_to_relu": False,
@@ -140,7 +140,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         else:
             trainer = MulticlassTrainer(train_dataset, param)
         model = trainer.train()
-        model = trainer.train_classifier(freeze=False, new_param=param)
+        model = trainer.train_classifier(freeze=param['freeze'], new_param=param)
 
 if __name__ == '__main__':
     print(plac.call(main))
