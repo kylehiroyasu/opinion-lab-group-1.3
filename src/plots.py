@@ -112,7 +112,7 @@ def plot_losses(df, difference):
     plt.show()
 
 
-def plot_performance(df, difference, metric='f1', subplot=None, title=None):
+def plot_performance(df, difference, metric='f1', subplot=None, title=None, train=True, eval_data=True):
 
     if subplot is None:
         fig, subplot = plt.subplots()
@@ -120,18 +120,19 @@ def plot_performance(df, difference, metric='f1', subplot=None, title=None):
     df.sort_values(difference, inplace=True)
 
     for index, row in df.iterrows():
-        train_df = pd.DataFrame(row['classifier_train_performance'])
-        eval_df = pd.DataFrame(row['classifier_eval_performance'])
-
         differentiator = row[difference]
-        train_epochs = train_df.epoch.tolist()
-        train_perf = train_df[metric].tolist()
-        eval_epochs = eval_df.epoch.tolist()
-        eval_perf = eval_df[metric].tolist()
 
-        subplot.plot(train_epochs, train_perf, label='{} train_{}'.format(differentiator, metric))
-        subplot.plot(eval_epochs, eval_perf, label='{} eval_{}'.format(differentiator, metric))
-
+        if train:
+            train_df = pd.DataFrame(row['classifier_train_performance'])
+            train_epochs = train_df.epoch.tolist()
+            train_perf = train_df[metric].tolist()
+            subplot.plot(train_epochs, train_perf, label='{} train_{}'.format(differentiator, metric))
+        
+        if eval_data:
+            eval_df = pd.DataFrame(row['classifier_eval_performance'])
+            eval_epochs = eval_df.epoch.tolist()
+            eval_perf = eval_df[metric].tolist()
+            subplot.plot(eval_epochs, eval_perf, label='{} eval_{}'.format(differentiator, metric))
     subplot.legend()
     if title is None:
         subplot.set_title('{}-Scores Comparing {}'.format(metric, difference))
