@@ -71,7 +71,7 @@ def load_embeddings(name):
     epochs=("The number of epoch to train with", "option", "e", int, None),
     lr=("Learning rate", "option", "lr", float, None),
     cuda=("Flag if cuda should be used", "flag", None),
-    freeze("Flag if weights should be frozen", "flag", "f")
+    freeze=("Flag if weights should be frozen", "flag", "f")
 )
 def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=5e-5, cuda=False, freeze=False):
     use_attributes = label == 'attribute' 
