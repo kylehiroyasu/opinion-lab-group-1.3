@@ -1,0 +1,915 @@
+{"dataset": "restaurants", "label": "entity", "embedding": "bert-base-cased", "binary": true, "binary_target_class": "LOCATION", "embedding_dim": 3072, "output_dim": 7, "classification_dim": 1, "epochs": 500, "lr": 5e-05, "lr_decay_epochs": 350, "batch_size": 512, "use_padding": true, "validation_percentage": 0.1, "binary_sampling_percentage": 1, "cuda": true, "use_kcl": false, "with_supervised": false, "patience_early_stopping": 100, "save_model_path": "models/restaurants/entity/", "use_micro_average": true, "train_entities": true, "target_class": "LOCATION", "freeze": false, "save_training_records": true, "use_linmodel": true, "switch_to_relu": false, "activation": "relu", "records_data_path": "records/restaurants/entity/"}
+{"epoch": 0, "model": "binary-abae", "loss": 0.8103959560394287, "eval_loss": 0.31362634897232056}
+{"epoch": 1, "model": "binary-abae", "loss": 0.7440877556800842, "eval_loss": 0.2911016047000885}
+{"epoch": 2, "model": "binary-abae", "loss": 0.520739734172821, "eval_loss": 0.25557661056518555}
+{"epoch": 3, "model": "binary-abae", "loss": 0.4596143662929535, "eval_loss": 0.21846738457679749}
+{"epoch": 4, "model": "binary-abae", "loss": 0.4288604259490967, "eval_loss": 0.21013040840625763}
+{"epoch": 5, "model": "binary-abae", "loss": 0.39554208517074585, "eval_loss": 0.16782960295677185}
+{"epoch": 6, "model": "binary-abae", "loss": 0.38558077812194824, "eval_loss": 0.15761354565620422}
+{"epoch": 7, "model": "binary-abae", "loss": 0.33915644884109497, "eval_loss": 0.1587934046983719}
+{"epoch": 8, "model": "binary-abae", "loss": 0.31370851397514343, "eval_loss": 0.13755632936954498}
+{"epoch": 9, "model": "binary-abae", "loss": 0.29527148604393005, "eval_loss": 0.1445746272802353}
+{"epoch": 10, "model": "binary-abae", "loss": 0.28098925948143005, "eval_loss": 0.1222851499915123}
+{"epoch": 11, "model": "binary-abae", "loss": 0.2643314599990845, "eval_loss": 0.16957074403762817}
+{"epoch": 12, "model": "binary-abae", "loss": 0.2455819994211197, "eval_loss": 0.10891474038362503}
+{"epoch": 13, "model": "binary-abae", "loss": 0.2455865442752838, "eval_loss": 0.16847553849220276}
+{"epoch": 14, "model": "binary-abae", "loss": 0.2012663185596466, "eval_loss": 0.10400153696537018}
+{"epoch": 15, "model": "binary-abae", "loss": 0.1830349713563919, "eval_loss": 0.16936062276363373}
+{"epoch": 16, "model": "binary-abae", "loss": 0.20449718832969666, "eval_loss": 0.10523925721645355}
+{"epoch": 17, "model": "binary-abae", "loss": 0.21873514354228973, "eval_loss": 0.13015024363994598}
+{"epoch": 18, "model": "binary-abae", "loss": 0.1569211781024933, "eval_loss": 0.09895432740449905}
+{"epoch": 19, "model": "binary-abae", "loss": 0.14985357224941254, "eval_loss": 0.11181380599737167}
+{"epoch": 20, "model": "binary-abae", "loss": 0.11048667132854462, "eval_loss": 0.11047548800706863}
+{"epoch": 21, "model": "binary-abae", "loss": 0.10975117981433868, "eval_loss": 0.10308471322059631}
+{"epoch": 22, "model": "binary-abae", "loss": 0.10169905424118042, "eval_loss": 0.10199924558401108}
+{"epoch": 23, "model": "binary-abae", "loss": 0.10781984031200409, "eval_loss": 0.09748568385839462}
+{"epoch": 24, "model": "binary-abae", "loss": 0.09560267627239227, "eval_loss": 0.09896767139434814}
+{"epoch": 25, "model": "binary-abae", "loss": 0.1052544042468071, "eval_loss": 0.09016507118940353}
+{"epoch": 26, "model": "binary-abae", "loss": 0.08474783599376678, "eval_loss": 0.10252948850393295}
+{"epoch": 27, "model": "binary-abae", "loss": 0.07157919555902481, "eval_loss": 0.09063665568828583}
+{"epoch": 28, "model": "binary-abae", "loss": 0.07534241676330566, "eval_loss": 0.09080425649881363}
+{"epoch": 29, "model": "binary-abae", "loss": 0.06124645844101906, "eval_loss": 0.09510763734579086}
+{"epoch": 30, "model": "binary-abae", "loss": 0.056131839752197266, "eval_loss": 0.09318534284830093}
+{"epoch": 31, "model": "binary-abae", "loss": 0.06214366480708122, "eval_loss": 0.0885346308350563}
+{"epoch": 32, "model": "binary-abae", "loss": 0.0540122464299202, "eval_loss": 0.09279585629701614}
+{"epoch": 33, "model": "binary-abae", "loss": 0.051810767501592636, "eval_loss": 0.08867570757865906}
+{"epoch": 34, "model": "binary-abae", "loss": 0.053910572081804276, "eval_loss": 0.08875225484371185}
+{"epoch": 35, "model": "binary-abae", "loss": 0.04445913806557655, "eval_loss": 0.09262572973966599}
+{"epoch": 36, "model": "binary-abae", "loss": 0.03952210396528244, "eval_loss": 0.0900329202413559}
+{"epoch": 37, "model": "binary-abae", "loss": 0.039958275854587555, "eval_loss": 0.08980617672204971}
+{"epoch": 38, "model": "binary-abae", "loss": 0.041258782148361206, "eval_loss": 0.08985613286495209}
+{"epoch": 39, "model": "binary-abae", "loss": 0.035507749766111374, "eval_loss": 0.09060882031917572}
+{"epoch": 40, "model": "binary-abae", "loss": 0.027410108596086502, "eval_loss": 0.09242791682481766}
+{"epoch": 41, "model": "binary-abae", "loss": 0.03545719012618065, "eval_loss": 0.09042860567569733}
+{"epoch": 42, "model": "binary-abae", "loss": 0.030887408182024956, "eval_loss": 0.09152046591043472}
+{"epoch": 43, "model": "binary-abae", "loss": 0.033826395869255066, "eval_loss": 0.09132276475429535}
+{"epoch": 44, "model": "binary-abae", "loss": 0.02935013733804226, "eval_loss": 0.09148162603378296}
+{"epoch": 45, "model": "binary-abae", "loss": 0.02545841597020626, "eval_loss": 0.0924244225025177}
+{"epoch": 46, "model": "binary-abae", "loss": 0.032187968492507935, "eval_loss": 0.09309744834899902}
+{"epoch": 47, "model": "binary-abae", "loss": 0.026598898693919182, "eval_loss": 0.09291785210371017}
+{"epoch": 48, "model": "binary-abae", "loss": 0.024370593950152397, "eval_loss": 0.0929931104183197}
+{"epoch": 49, "model": "binary-abae", "loss": 0.026978662237524986, "eval_loss": 0.09365517646074295}
+{"epoch": 50, "model": "binary-abae", "loss": 0.023918461054563522, "eval_loss": 0.09376648813486099}
+{"epoch": 51, "model": "binary-abae", "loss": 0.0224603321403265, "eval_loss": 0.09374380856752396}
+{"epoch": 52, "model": "binary-abae", "loss": 0.02267228253185749, "eval_loss": 0.0942782610654831}
+{"epoch": 53, "model": "binary-abae", "loss": 0.019098004326224327, "eval_loss": 0.094525545835495}
+{"epoch": 54, "model": "binary-abae", "loss": 0.022036565467715263, "eval_loss": 0.09537394344806671}
+{"epoch": 55, "model": "binary-abae", "loss": 0.01777542755007744, "eval_loss": 0.09553474187850952}
+{"epoch": 56, "model": "binary-abae", "loss": 0.01782127283513546, "eval_loss": 0.09605289250612259}
+{"epoch": 57, "model": "binary-abae", "loss": 0.018474429845809937, "eval_loss": 0.09674146771430969}
+{"epoch": 58, "model": "binary-abae", "loss": 0.019206993281841278, "eval_loss": 0.09732746332883835}
+{"epoch": 59, "model": "binary-abae", "loss": 0.0160905160009861, "eval_loss": 0.09758475422859192}
+{"epoch": 60, "model": "binary-abae", "loss": 0.01878555491566658, "eval_loss": 0.09842447936534882}
+{"epoch": 61, "model": "binary-abae", "loss": 0.01637263409793377, "eval_loss": 0.0984797477722168}
+{"epoch": 62, "model": "binary-abae", "loss": 0.01362383458763361, "eval_loss": 0.09827139973640442}
+{"epoch": 63, "model": "binary-abae", "loss": 0.013471500016748905, "eval_loss": 0.09896183758974075}
+{"epoch": 64, "model": "binary-abae", "loss": 0.014399810694158077, "eval_loss": 0.09922007471323013}
+{"epoch": 65, "model": "binary-abae", "loss": 0.013394373469054699, "eval_loss": 0.09953980892896652}
+{"epoch": 66, "model": "binary-abae", "loss": 0.014105621725320816, "eval_loss": 0.10022634267807007}
+{"epoch": 67, "model": "binary-abae", "loss": 0.012240096926689148, "eval_loss": 0.10037998855113983}
+{"epoch": 68, "model": "binary-abae", "loss": 0.013308985158801079, "eval_loss": 0.10065396130084991}
+{"epoch": 69, "model": "binary-abae", "loss": 0.013112963177263737, "eval_loss": 0.10176943987607956}
+{"epoch": 70, "model": "binary-abae", "loss": 0.011626488529145718, "eval_loss": 0.10178770869970322}
+{"epoch": 71, "model": "binary-abae", "loss": 0.01100667379796505, "eval_loss": 0.10156792402267456}
+{"epoch": 72, "model": "binary-abae", "loss": 0.011264045722782612, "eval_loss": 0.10237088054418564}
+{"epoch": 73, "model": "binary-abae", "loss": 0.01249177660793066, "eval_loss": 0.10313528776168823}
+{"epoch": 74, "model": "binary-abae", "loss": 0.010567146353423595, "eval_loss": 0.10278674215078354}
+{"epoch": 75, "model": "binary-abae", "loss": 0.008899617940187454, "eval_loss": 0.10327479988336563}
+{"epoch": 76, "model": "binary-abae", "loss": 0.011016055941581726, "eval_loss": 0.1037406474351883}
+{"epoch": 77, "model": "binary-abae", "loss": 0.009633534587919712, "eval_loss": 0.10351859778165817}
+{"epoch": 78, "model": "binary-abae", "loss": 0.011880246922373772, "eval_loss": 0.10419470071792603}
+{"epoch": 79, "model": "binary-abae", "loss": 0.009721879847347736, "eval_loss": 0.10495856404304504}
+{"epoch": 80, "model": "binary-abae", "loss": 0.008312409743666649, "eval_loss": 0.10494313389062881}
+{"epoch": 81, "model": "binary-abae", "loss": 0.008006636053323746, "eval_loss": 0.10528454184532166}
+{"epoch": 82, "model": "binary-abae", "loss": 0.008713423274457455, "eval_loss": 0.10557243227958679}
+{"epoch": 83, "model": "binary-abae", "loss": 0.009198523126542568, "eval_loss": 0.10657859593629837}
+{"epoch": 84, "model": "binary-abae", "loss": 0.008534342050552368, "eval_loss": 0.10645998269319534}
+{"epoch": 85, "model": "binary-abae", "loss": 0.009405580349266529, "eval_loss": 0.10715626180171967}
+{"epoch": 86, "model": "binary-abae", "loss": 0.009917579591274261, "eval_loss": 0.10744310915470123}
+{"epoch": 87, "model": "binary-abae", "loss": 0.007550057955086231, "eval_loss": 0.10729461163282394}
+{"epoch": 88, "model": "binary-abae", "loss": 0.007618335075676441, "eval_loss": 0.1077890619635582}
+{"epoch": 89, "model": "binary-abae", "loss": 0.007754216436296701, "eval_loss": 0.10790111124515533}
+{"epoch": 90, "model": "binary-abae", "loss": 0.007852218113839626, "eval_loss": 0.10852133482694626}
+{"epoch": 91, "model": "binary-abae", "loss": 0.007199378684163094, "eval_loss": 0.10858295857906342}
+{"epoch": 92, "model": "binary-abae", "loss": 0.007360599935054779, "eval_loss": 0.10843128710985184}
+{"epoch": 93, "model": "binary-abae", "loss": 0.005884954240173101, "eval_loss": 0.10849695652723312}
+{"epoch": 94, "model": "binary-abae", "loss": 0.007138851564377546, "eval_loss": 0.10883346945047379}
+{"epoch": 95, "model": "binary-abae", "loss": 0.008522500284016132, "eval_loss": 0.11080031096935272}
+{"epoch": 96, "model": "binary-abae", "loss": 0.006594849284738302, "eval_loss": 0.11020397394895554}
+{"epoch": 97, "model": "binary-abae", "loss": 0.006802133284509182, "eval_loss": 0.11061939597129822}
+{"epoch": 98, "model": "binary-abae", "loss": 0.0064790197648108006, "eval_loss": 0.11102409660816193}
+{"epoch": 99, "model": "binary-abae", "loss": 0.007429886143654585, "eval_loss": 0.11149502545595169}
+{"epoch": 100, "model": "binary-abae", "loss": 0.0068798307329416275, "eval_loss": 0.11164437234401703}
+{"epoch": 101, "model": "binary-abae", "loss": 0.005850457586348057, "eval_loss": 0.11167851090431213}
+{"epoch": 102, "model": "binary-abae", "loss": 0.007871350273489952, "eval_loss": 0.11277402192354202}
+{"epoch": 103, "model": "binary-abae", "loss": 0.006431251298636198, "eval_loss": 0.1128399595618248}
+{"epoch": 104, "model": "binary-abae", "loss": 0.006858729757368565, "eval_loss": 0.11282575130462646}
+{"epoch": 105, "model": "binary-abae", "loss": 0.007159450091421604, "eval_loss": 0.11337831616401672}
+{"epoch": 106, "model": "binary-abae", "loss": 0.005872480571269989, "eval_loss": 0.11402015388011932}
+{"epoch": 107, "model": "binary-abae", "loss": 0.006713662762194872, "eval_loss": 0.11416171491146088}
+{"epoch": 108, "model": "binary-abae", "loss": 0.0063308896496891975, "eval_loss": 0.1148008480668068}
+{"epoch": 109, "model": "binary-abae", "loss": 0.00619529839605093, "eval_loss": 0.11486245691776276}
+{"epoch": 110, "model": "binary-abae", "loss": 0.0066834017634391785, "eval_loss": 0.11444254964590073}
+{"epoch": 111, "model": "binary-abae", "loss": 0.006533595733344555, "eval_loss": 0.1145031675696373}
+{"epoch": 112, "model": "binary-abae", "loss": 0.0061204214580357075, "eval_loss": 0.11508990079164505}
+{"epoch": 113, "model": "binary-abae", "loss": 0.004497152287513018, "eval_loss": 0.11456345021724701}
+{"epoch": 114, "model": "binary-abae", "loss": 0.004964735358953476, "eval_loss": 0.11520025134086609}
+{"epoch": 115, "model": "binary-abae", "loss": 0.0058260406367480755, "eval_loss": 0.11607485264539719}
+{"epoch": 116, "model": "binary-abae", "loss": 0.006320063956081867, "eval_loss": 0.11618655920028687}
+{"epoch": 117, "model": "binary-abae", "loss": 0.005105546675622463, "eval_loss": 0.11704295128583908}
+{"epoch": 118, "model": "binary-abae", "loss": 0.005519368220120668, "eval_loss": 0.11714310199022293}
+{"epoch": 119, "model": "binary-abae", "loss": 0.005529793445020914, "eval_loss": 0.11729802936315536}
+{"epoch": 120, "model": "binary-abae", "loss": 0.005256980657577515, "eval_loss": 0.11739477515220642}
+{"epoch": 121, "model": "binary-abae", "loss": 0.005568660795688629, "eval_loss": 0.117451511323452}
+{"epoch": 122, "model": "binary-abae", "loss": 0.0044046565890312195, "eval_loss": 0.11744804680347443}
+{"epoch": 123, "model": "binary-abae", "loss": 0.004967949818819761, "eval_loss": 0.11833176016807556}
+{"epoch": 124, "model": "binary-abae", "loss": 0.004651164170354605, "eval_loss": 0.1183791235089302}
+{"epoch": 125, "model": "binary-abae", "loss": 0.003920222166925669, "eval_loss": 0.11758476495742798}
+{"epoch": 126, "model": "binary-abae", "loss": 0.005741887725889683, "eval_loss": 0.11864012479782104}
+{"epoch": 127, "model": "binary-abae", "loss": 0.005162358283996582, "eval_loss": 0.11864420771598816}
+{"epoch": 128, "model": "binary-abae", "loss": 0.005022582598030567, "eval_loss": 0.11864494532346725}
+{"epoch": 129, "model": "binary-abae", "loss": 0.005056018941104412, "eval_loss": 0.11864496767520905}
+{"epoch": 130, "model": "binary-abae", "loss": 0.004503702744841576, "eval_loss": 0.11864498257637024}
+{"dataset": "restaurants", "label": "entity", "embedding": "bert-base-cased", "binary": true, "binary_target_class": "LOCATION", "embedding_dim": 3072, "output_dim": 7, "classification_dim": 1, "epochs": 500, "lr": 5e-05, "lr_decay_epochs": 350, "batch_size": 512, "use_padding": true, "validation_percentage": 0.1, "binary_sampling_percentage": 1, "cuda": true, "use_kcl": false, "with_supervised": false, "patience_early_stopping": 100, "save_model_path": "models/restaurants/entity/", "use_micro_average": true, "train_entities": true, "target_class": "LOCATION", "freeze": false, "save_training_records": true, "use_linmodel": true, "switch_to_relu": false, "activation": "relu", "records_data_path": "records/restaurants/entity/"}
+{"epoch": 0, "model": "binary-abae", "loss": 0.8103959560394287, "eval_loss": 0.31362634897232056}
+{"epoch": 1, "model": "binary-abae", "loss": 0.7440877556800842, "eval_loss": 0.2911016047000885}
+{"epoch": 2, "model": "binary-abae", "loss": 0.520739734172821, "eval_loss": 0.25557661056518555}
+{"epoch": 3, "model": "binary-abae", "loss": 0.4596143662929535, "eval_loss": 0.21846738457679749}
+{"epoch": 4, "model": "binary-abae", "loss": 0.4288604259490967, "eval_loss": 0.21013040840625763}
+{"epoch": 5, "model": "binary-abae", "loss": 0.39554208517074585, "eval_loss": 0.16782960295677185}
+{"epoch": 6, "model": "binary-abae", "loss": 0.38558077812194824, "eval_loss": 0.15761354565620422}
+{"epoch": 7, "model": "binary-abae", "loss": 0.33915644884109497, "eval_loss": 0.1587934046983719}
+{"epoch": 8, "model": "binary-abae", "loss": 0.31370851397514343, "eval_loss": 0.13755632936954498}
+{"epoch": 9, "model": "binary-abae", "loss": 0.29527148604393005, "eval_loss": 0.1445746272802353}
+{"epoch": 10, "model": "binary-abae", "loss": 0.28098925948143005, "eval_loss": 0.1222851499915123}
+{"epoch": 11, "model": "binary-abae", "loss": 0.2643314599990845, "eval_loss": 0.16957074403762817}
+{"epoch": 12, "model": "binary-abae", "loss": 0.2455819994211197, "eval_loss": 0.10891474038362503}
+{"epoch": 13, "model": "binary-abae", "loss": 0.2455865442752838, "eval_loss": 0.16847553849220276}
+{"epoch": 14, "model": "binary-abae", "loss": 0.2012663185596466, "eval_loss": 0.10400153696537018}
+{"epoch": 15, "model": "binary-abae", "loss": 0.1830349713563919, "eval_loss": 0.16936062276363373}
+{"epoch": 16, "model": "binary-abae", "loss": 0.20449718832969666, "eval_loss": 0.10523925721645355}
+{"epoch": 17, "model": "binary-abae", "loss": 0.21873514354228973, "eval_loss": 0.13015024363994598}
+{"epoch": 18, "model": "binary-abae", "loss": 0.1569211781024933, "eval_loss": 0.09895432740449905}
+{"epoch": 19, "model": "binary-abae", "loss": 0.14985357224941254, "eval_loss": 0.11181380599737167}
+{"epoch": 20, "model": "binary-abae", "loss": 0.11048667132854462, "eval_loss": 0.11047548800706863}
+{"epoch": 21, "model": "binary-abae", "loss": 0.10975117981433868, "eval_loss": 0.10308471322059631}
+{"epoch": 22, "model": "binary-abae", "loss": 0.10169905424118042, "eval_loss": 0.10199924558401108}
+{"epoch": 23, "model": "binary-abae", "loss": 0.10781984031200409, "eval_loss": 0.09748568385839462}
+{"epoch": 24, "model": "binary-abae", "loss": 0.09560267627239227, "eval_loss": 0.09896767139434814}
+{"epoch": 25, "model": "binary-abae", "loss": 0.1052544042468071, "eval_loss": 0.09016507118940353}
+{"epoch": 26, "model": "binary-abae", "loss": 0.08474783599376678, "eval_loss": 0.10252948850393295}
+{"epoch": 27, "model": "binary-abae", "loss": 0.07157919555902481, "eval_loss": 0.09063665568828583}
+{"epoch": 28, "model": "binary-abae", "loss": 0.07534241676330566, "eval_loss": 0.09080425649881363}
+{"epoch": 29, "model": "binary-abae", "loss": 0.06124645844101906, "eval_loss": 0.09510763734579086}
+{"epoch": 30, "model": "binary-abae", "loss": 0.056131839752197266, "eval_loss": 0.09318534284830093}
+{"epoch": 31, "model": "binary-abae", "loss": 0.06214366480708122, "eval_loss": 0.0885346308350563}
+{"epoch": 32, "model": "binary-abae", "loss": 0.0540122464299202, "eval_loss": 0.09279585629701614}
+{"epoch": 33, "model": "binary-abae", "loss": 0.051810767501592636, "eval_loss": 0.08867570757865906}
+{"epoch": 34, "model": "binary-abae", "loss": 0.053910572081804276, "eval_loss": 0.08875225484371185}
+{"epoch": 35, "model": "binary-abae", "loss": 0.04445913806557655, "eval_loss": 0.09262572973966599}
+{"epoch": 36, "model": "binary-abae", "loss": 0.03952210396528244, "eval_loss": 0.0900329202413559}
+{"epoch": 37, "model": "binary-abae", "loss": 0.039958275854587555, "eval_loss": 0.08980617672204971}
+{"epoch": 38, "model": "binary-abae", "loss": 0.041258782148361206, "eval_loss": 0.08985613286495209}
+{"epoch": 39, "model": "binary-abae", "loss": 0.035507749766111374, "eval_loss": 0.09060882031917572}
+{"epoch": 40, "model": "binary-abae", "loss": 0.027410108596086502, "eval_loss": 0.09242791682481766}
+{"epoch": 41, "model": "binary-abae", "loss": 0.03545719012618065, "eval_loss": 0.09042860567569733}
+{"epoch": 42, "model": "binary-abae", "loss": 0.030887408182024956, "eval_loss": 0.09152046591043472}
+{"epoch": 43, "model": "binary-abae", "loss": 0.033826395869255066, "eval_loss": 0.09132276475429535}
+{"epoch": 44, "model": "binary-abae", "loss": 0.02935013733804226, "eval_loss": 0.09148162603378296}
+{"epoch": 45, "model": "binary-abae", "loss": 0.02545841597020626, "eval_loss": 0.0924244225025177}
+{"epoch": 46, "model": "binary-abae", "loss": 0.032187968492507935, "eval_loss": 0.09309744834899902}
+{"epoch": 47, "model": "binary-abae", "loss": 0.026598898693919182, "eval_loss": 0.09291785210371017}
+{"epoch": 48, "model": "binary-abae", "loss": 0.024370593950152397, "eval_loss": 0.0929931104183197}
+{"epoch": 49, "model": "binary-abae", "loss": 0.026978662237524986, "eval_loss": 0.09365517646074295}
+{"epoch": 50, "model": "binary-abae", "loss": 0.023918461054563522, "eval_loss": 0.09376648813486099}
+{"epoch": 51, "model": "binary-abae", "loss": 0.0224603321403265, "eval_loss": 0.09374380856752396}
+{"epoch": 52, "model": "binary-abae", "loss": 0.02267228253185749, "eval_loss": 0.0942782610654831}
+{"epoch": 53, "model": "binary-abae", "loss": 0.019098004326224327, "eval_loss": 0.094525545835495}
+{"epoch": 54, "model": "binary-abae", "loss": 0.022036565467715263, "eval_loss": 0.09537394344806671}
+{"epoch": 55, "model": "binary-abae", "loss": 0.01777542755007744, "eval_loss": 0.09553474187850952}
+{"epoch": 56, "model": "binary-abae", "loss": 0.01782127283513546, "eval_loss": 0.09605289250612259}
+{"epoch": 57, "model": "binary-abae", "loss": 0.018474429845809937, "eval_loss": 0.09674146771430969}
+{"epoch": 58, "model": "binary-abae", "loss": 0.019206993281841278, "eval_loss": 0.09732746332883835}
+{"epoch": 59, "model": "binary-abae", "loss": 0.0160905160009861, "eval_loss": 0.09758475422859192}
+{"epoch": 60, "model": "binary-abae", "loss": 0.01878555491566658, "eval_loss": 0.09842447936534882}
+{"epoch": 61, "model": "binary-abae", "loss": 0.01637263409793377, "eval_loss": 0.0984797477722168}
+{"epoch": 62, "model": "binary-abae", "loss": 0.01362383458763361, "eval_loss": 0.09827139973640442}
+{"epoch": 63, "model": "binary-abae", "loss": 0.013471500016748905, "eval_loss": 0.09896183758974075}
+{"epoch": 64, "model": "binary-abae", "loss": 0.014399810694158077, "eval_loss": 0.09922007471323013}
+{"epoch": 65, "model": "binary-abae", "loss": 0.013394373469054699, "eval_loss": 0.09953980892896652}
+{"epoch": 66, "model": "binary-abae", "loss": 0.014105621725320816, "eval_loss": 0.10022634267807007}
+{"epoch": 67, "model": "binary-abae", "loss": 0.012240096926689148, "eval_loss": 0.10037998855113983}
+{"epoch": 68, "model": "binary-abae", "loss": 0.013308985158801079, "eval_loss": 0.10065396130084991}
+{"epoch": 69, "model": "binary-abae", "loss": 0.013112963177263737, "eval_loss": 0.10176943987607956}
+{"epoch": 70, "model": "binary-abae", "loss": 0.011626488529145718, "eval_loss": 0.10178770869970322}
+{"epoch": 71, "model": "binary-abae", "loss": 0.01100667379796505, "eval_loss": 0.10156792402267456}
+{"epoch": 72, "model": "binary-abae", "loss": 0.011264045722782612, "eval_loss": 0.10237088054418564}
+{"epoch": 73, "model": "binary-abae", "loss": 0.01249177660793066, "eval_loss": 0.10313528776168823}
+{"epoch": 74, "model": "binary-abae", "loss": 0.010567146353423595, "eval_loss": 0.10278674215078354}
+{"epoch": 75, "model": "binary-abae", "loss": 0.008899617940187454, "eval_loss": 0.10327479988336563}
+{"epoch": 76, "model": "binary-abae", "loss": 0.011016055941581726, "eval_loss": 0.1037406474351883}
+{"epoch": 77, "model": "binary-abae", "loss": 0.009633534587919712, "eval_loss": 0.10351859778165817}
+{"epoch": 78, "model": "binary-abae", "loss": 0.011880246922373772, "eval_loss": 0.10419470071792603}
+{"epoch": 79, "model": "binary-abae", "loss": 0.009721879847347736, "eval_loss": 0.10495856404304504}
+{"epoch": 80, "model": "binary-abae", "loss": 0.008312409743666649, "eval_loss": 0.10494313389062881}
+{"epoch": 81, "model": "binary-abae", "loss": 0.008006636053323746, "eval_loss": 0.10528454184532166}
+{"epoch": 82, "model": "binary-abae", "loss": 0.008713423274457455, "eval_loss": 0.10557243227958679}
+{"epoch": 83, "model": "binary-abae", "loss": 0.009198523126542568, "eval_loss": 0.10657859593629837}
+{"epoch": 84, "model": "binary-abae", "loss": 0.008534342050552368, "eval_loss": 0.10645998269319534}
+{"epoch": 85, "model": "binary-abae", "loss": 0.009405580349266529, "eval_loss": 0.10715626180171967}
+{"epoch": 86, "model": "binary-abae", "loss": 0.009917579591274261, "eval_loss": 0.10744310915470123}
+{"epoch": 87, "model": "binary-abae", "loss": 0.007550057955086231, "eval_loss": 0.10729461163282394}
+{"epoch": 88, "model": "binary-abae", "loss": 0.007618335075676441, "eval_loss": 0.1077890619635582}
+{"epoch": 89, "model": "binary-abae", "loss": 0.007754216436296701, "eval_loss": 0.10790111124515533}
+{"epoch": 90, "model": "binary-abae", "loss": 0.007852218113839626, "eval_loss": 0.10852133482694626}
+{"epoch": 91, "model": "binary-abae", "loss": 0.007199378684163094, "eval_loss": 0.10858295857906342}
+{"epoch": 92, "model": "binary-abae", "loss": 0.007360599935054779, "eval_loss": 0.10843128710985184}
+{"epoch": 93, "model": "binary-abae", "loss": 0.005884954240173101, "eval_loss": 0.10849695652723312}
+{"epoch": 94, "model": "binary-abae", "loss": 0.007138851564377546, "eval_loss": 0.10883346945047379}
+{"epoch": 95, "model": "binary-abae", "loss": 0.008522500284016132, "eval_loss": 0.11080031096935272}
+{"epoch": 96, "model": "binary-abae", "loss": 0.006594849284738302, "eval_loss": 0.11020397394895554}
+{"epoch": 97, "model": "binary-abae", "loss": 0.006802133284509182, "eval_loss": 0.11061939597129822}
+{"epoch": 98, "model": "binary-abae", "loss": 0.0064790197648108006, "eval_loss": 0.11102409660816193}
+{"epoch": 99, "model": "binary-abae", "loss": 0.007429886143654585, "eval_loss": 0.11149502545595169}
+{"epoch": 100, "model": "binary-abae", "loss": 0.0068798307329416275, "eval_loss": 0.11164437234401703}
+{"epoch": 101, "model": "binary-abae", "loss": 0.005850457586348057, "eval_loss": 0.11167851090431213}
+{"epoch": 102, "model": "binary-abae", "loss": 0.007871350273489952, "eval_loss": 0.11277402192354202}
+{"epoch": 103, "model": "binary-abae", "loss": 0.006431251298636198, "eval_loss": 0.1128399595618248}
+{"epoch": 104, "model": "binary-abae", "loss": 0.006858729757368565, "eval_loss": 0.11282575130462646}
+{"epoch": 105, "model": "binary-abae", "loss": 0.007159450091421604, "eval_loss": 0.11337831616401672}
+{"epoch": 106, "model": "binary-abae", "loss": 0.005872480571269989, "eval_loss": 0.11402015388011932}
+{"epoch": 107, "model": "binary-abae", "loss": 0.006713662762194872, "eval_loss": 0.11416171491146088}
+{"epoch": 108, "model": "binary-abae", "loss": 0.0063308896496891975, "eval_loss": 0.1148008480668068}
+{"epoch": 109, "model": "binary-abae", "loss": 0.00619529839605093, "eval_loss": 0.11486245691776276}
+{"epoch": 110, "model": "binary-abae", "loss": 0.0066834017634391785, "eval_loss": 0.11444254964590073}
+{"epoch": 111, "model": "binary-abae", "loss": 0.006533595733344555, "eval_loss": 0.1145031675696373}
+{"epoch": 112, "model": "binary-abae", "loss": 0.0061204214580357075, "eval_loss": 0.11508990079164505}
+{"epoch": 113, "model": "binary-abae", "loss": 0.004497152287513018, "eval_loss": 0.11456345021724701}
+{"epoch": 114, "model": "binary-abae", "loss": 0.004964735358953476, "eval_loss": 0.11520025134086609}
+{"epoch": 115, "model": "binary-abae", "loss": 0.0058260406367480755, "eval_loss": 0.11607485264539719}
+{"epoch": 116, "model": "binary-abae", "loss": 0.006320063956081867, "eval_loss": 0.11618655920028687}
+{"epoch": 117, "model": "binary-abae", "loss": 0.005105546675622463, "eval_loss": 0.11704295128583908}
+{"epoch": 118, "model": "binary-abae", "loss": 0.005519368220120668, "eval_loss": 0.11714310199022293}
+{"epoch": 119, "model": "binary-abae", "loss": 0.005529793445020914, "eval_loss": 0.11729802936315536}
+{"epoch": 120, "model": "binary-abae", "loss": 0.005256980657577515, "eval_loss": 0.11739477515220642}
+{"epoch": 121, "model": "binary-abae", "loss": 0.005568660795688629, "eval_loss": 0.117451511323452}
+{"epoch": 122, "model": "binary-abae", "loss": 0.0044046565890312195, "eval_loss": 0.11744804680347443}
+{"epoch": 123, "model": "binary-abae", "loss": 0.004967949818819761, "eval_loss": 0.11833176016807556}
+{"epoch": 124, "model": "binary-abae", "loss": 0.004651164170354605, "eval_loss": 0.1183791235089302}
+{"epoch": 125, "model": "binary-abae", "loss": 0.003920222166925669, "eval_loss": 0.11758476495742798}
+{"epoch": 126, "model": "binary-abae", "loss": 0.005741887725889683, "eval_loss": 0.11864012479782104}
+{"epoch": 127, "model": "binary-abae", "loss": 0.005162358283996582, "eval_loss": 0.11864420771598816}
+{"epoch": 128, "model": "binary-abae", "loss": 0.005022582598030567, "eval_loss": 0.11864494532346725}
+{"epoch": 129, "model": "binary-abae", "loss": 0.005056018941104412, "eval_loss": 0.11864496767520905}
+{"epoch": 130, "model": "binary-abae", "loss": 0.004503702744841576, "eval_loss": 0.11864498257637024}
+{"f1": 0.0111731843575419, "recall": 0.12, "precision": 0.005859375, "epoch": 0, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 0, "step": "eval", "model": "classifier"}
+{"epoch": 0, "model": "classifier", "loss": 1.8094682693481445, "eval_loss": 0.7901234030723572}
+{"f1": 0.005714285714285714, "recall": 0.04, "precision": 0.003076923076923077, "epoch": 1, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 1, "step": "eval", "model": "classifier"}
+{"epoch": 1, "model": "classifier", "loss": 0.8169761300086975, "eval_loss": 0.5907463431358337}
+{"f1": 0.011627906976744186, "recall": 0.04, "precision": 0.006802721088435374, "epoch": 2, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 2, "step": "eval", "model": "classifier"}
+{"epoch": 2, "model": "classifier", "loss": 0.6315531134605408, "eval_loss": 0.48822662234306335}
+{"f1": 0.019417475728155338, "recall": 0.04, "precision": 0.01282051282051282, "epoch": 3, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 3, "step": "eval", "model": "classifier"}
+{"epoch": 3, "model": "classifier", "loss": 0.5540000796318054, "eval_loss": 0.4157577455043793}
+{"f1": 0.03571428571428571, "recall": 0.04, "precision": 0.03225806451612903, "epoch": 4, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 4, "step": "eval", "model": "classifier"}
+{"epoch": 4, "model": "classifier", "loss": 0.4809412956237793, "eval_loss": 0.364488810300827}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 5, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 5, "step": "eval", "model": "classifier"}
+{"epoch": 5, "model": "classifier", "loss": 0.4383179843425751, "eval_loss": 0.3265008330345154}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 6, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 6, "step": "eval", "model": "classifier"}
+{"epoch": 6, "model": "classifier", "loss": 0.397960364818573, "eval_loss": 0.29658886790275574}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 7, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 7, "step": "eval", "model": "classifier"}
+{"epoch": 7, "model": "classifier", "loss": 0.365594744682312, "eval_loss": 0.2726476192474365}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 8, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 8, "step": "eval", "model": "classifier"}
+{"epoch": 8, "model": "classifier", "loss": 0.3454931974411011, "eval_loss": 0.2542020082473755}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 9, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 9, "step": "eval", "model": "classifier"}
+{"epoch": 9, "model": "classifier", "loss": 0.3297763466835022, "eval_loss": 0.23901458084583282}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 10, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 10, "step": "eval", "model": "classifier"}
+{"epoch": 10, "model": "classifier", "loss": 0.3169986605644226, "eval_loss": 0.22646522521972656}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 11, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 11, "step": "eval", "model": "classifier"}
+{"epoch": 11, "model": "classifier", "loss": 0.2851458489894867, "eval_loss": 0.2165946662425995}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 12, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 12, "step": "eval", "model": "classifier"}
+{"epoch": 12, "model": "classifier", "loss": 0.28169935941696167, "eval_loss": 0.2074236273765564}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 13, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 13, "step": "eval", "model": "classifier"}
+{"epoch": 13, "model": "classifier", "loss": 0.27834412455558777, "eval_loss": 0.1991969645023346}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 14, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 14, "step": "eval", "model": "classifier"}
+{"epoch": 14, "model": "classifier", "loss": 0.2565038204193115, "eval_loss": 0.19239817559719086}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 15, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 15, "step": "eval", "model": "classifier"}
+{"epoch": 15, "model": "classifier", "loss": 0.24587827920913696, "eval_loss": 0.18632595241069794}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 16, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 16, "step": "eval", "model": "classifier"}
+{"epoch": 16, "model": "classifier", "loss": 0.24184374511241913, "eval_loss": 0.18033462762832642}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 17, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 17, "step": "eval", "model": "classifier"}
+{"epoch": 17, "model": "classifier", "loss": 0.2355060577392578, "eval_loss": 0.17515312135219574}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 18, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 18, "step": "eval", "model": "classifier"}
+{"epoch": 18, "model": "classifier", "loss": 0.2220565527677536, "eval_loss": 0.17071114480495453}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 19, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 19, "step": "eval", "model": "classifier"}
+{"epoch": 19, "model": "classifier", "loss": 0.21524937450885773, "eval_loss": 0.16644279658794403}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 20, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 20, "step": "eval", "model": "classifier"}
+{"epoch": 20, "model": "classifier", "loss": 0.20695802569389343, "eval_loss": 0.16189181804656982}
+{"f1": 0.07692307692307693, "recall": 0.04, "precision": 1.0, "epoch": 21, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 21, "step": "eval", "model": "classifier"}
+{"epoch": 21, "model": "classifier", "loss": 0.20030562579631805, "eval_loss": 0.1580902636051178}
+{"f1": 0.07692307692307693, "recall": 0.04, "precision": 1.0, "epoch": 22, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 22, "step": "eval", "model": "classifier"}
+{"epoch": 22, "model": "classifier", "loss": 0.19438621401786804, "eval_loss": 0.15485361218452454}
+{"f1": 0.07692307692307693, "recall": 0.04, "precision": 1.0, "epoch": 23, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 23, "step": "eval", "model": "classifier"}
+{"epoch": 23, "model": "classifier", "loss": 0.19198445975780487, "eval_loss": 0.15102934837341309}
+{"f1": 0.21428571428571425, "recall": 0.12, "precision": 1.0, "epoch": 24, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 24, "step": "eval", "model": "classifier"}
+{"epoch": 24, "model": "classifier", "loss": 0.17991065979003906, "eval_loss": 0.14779843389987946}
+{"f1": 0.21428571428571425, "recall": 0.12, "precision": 1.0, "epoch": 25, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 25, "step": "eval", "model": "classifier"}
+{"epoch": 25, "model": "classifier", "loss": 0.178432896733284, "eval_loss": 0.14401622116565704}
+{"f1": 0.21428571428571425, "recall": 0.12, "precision": 1.0, "epoch": 26, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 26, "step": "eval", "model": "classifier"}
+{"epoch": 26, "model": "classifier", "loss": 0.1676243394613266, "eval_loss": 0.14102602005004883}
+{"f1": 0.21428571428571425, "recall": 0.12, "precision": 1.0, "epoch": 27, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 27, "step": "eval", "model": "classifier"}
+{"epoch": 27, "model": "classifier", "loss": 0.16325700283050537, "eval_loss": 0.13847725093364716}
+{"f1": 0.2758620689655173, "recall": 0.16, "precision": 1.0, "epoch": 28, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 28, "step": "eval", "model": "classifier"}
+{"epoch": 28, "model": "classifier", "loss": 0.1600247472524643, "eval_loss": 0.1360432505607605}
+{"f1": 0.3870967741935484, "recall": 0.24, "precision": 1.0, "epoch": 29, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 29, "step": "eval", "model": "classifier"}
+{"epoch": 29, "model": "classifier", "loss": 0.15873698890209198, "eval_loss": 0.13308411836624146}
+{"f1": 0.43750000000000006, "recall": 0.28, "precision": 1.0, "epoch": 30, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 30, "step": "eval", "model": "classifier"}
+{"epoch": 30, "model": "classifier", "loss": 0.14777310192584991, "eval_loss": 0.1301412582397461}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 31, "step": "train", "model": "classifier"}
+{"f1": 0.0, "recall": 0.0, "precision": 0.0, "epoch": 31, "step": "eval", "model": "classifier"}
+{"epoch": 31, "model": "classifier", "loss": 0.1459764689207077, "eval_loss": 0.12747353315353394}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 32, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 32, "step": "eval", "model": "classifier"}
+{"epoch": 32, "model": "classifier", "loss": 0.13580234348773956, "eval_loss": 0.12504954636096954}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 33, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 33, "step": "eval", "model": "classifier"}
+{"epoch": 33, "model": "classifier", "loss": 0.13970154523849487, "eval_loss": 0.12255590409040451}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 34, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 34, "step": "eval", "model": "classifier"}
+{"epoch": 34, "model": "classifier", "loss": 0.13011066615581512, "eval_loss": 0.12069383263587952}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 35, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 35, "step": "eval", "model": "classifier"}
+{"epoch": 35, "model": "classifier", "loss": 0.13082832098007202, "eval_loss": 0.11873959004878998}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 36, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 36, "step": "eval", "model": "classifier"}
+{"epoch": 36, "model": "classifier", "loss": 0.1307685375213623, "eval_loss": 0.1168687716126442}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 37, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 37, "step": "eval", "model": "classifier"}
+{"epoch": 37, "model": "classifier", "loss": 0.12441549450159073, "eval_loss": 0.1154041513800621}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 38, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 38, "step": "eval", "model": "classifier"}
+{"epoch": 38, "model": "classifier", "loss": 0.12362183630466461, "eval_loss": 0.11398657411336899}
+{"f1": 0.48484848484848486, "recall": 0.32, "precision": 1.0, "epoch": 39, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 39, "step": "eval", "model": "classifier"}
+{"epoch": 39, "model": "classifier", "loss": 0.11809031665325165, "eval_loss": 0.1126277893781662}
+{"f1": 0.5294117647058824, "recall": 0.36, "precision": 1.0, "epoch": 40, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 40, "step": "eval", "model": "classifier"}
+{"epoch": 40, "model": "classifier", "loss": 0.1161423772573471, "eval_loss": 0.11104190349578857}
+{"f1": 0.5714285714285715, "recall": 0.4, "precision": 1.0, "epoch": 41, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 41, "step": "eval", "model": "classifier"}
+{"epoch": 41, "model": "classifier", "loss": 0.11597073078155518, "eval_loss": 0.10978440940380096}
+{"f1": 0.6111111111111112, "recall": 0.44, "precision": 1.0, "epoch": 42, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 42, "step": "eval", "model": "classifier"}
+{"epoch": 42, "model": "classifier", "loss": 0.11318789422512054, "eval_loss": 0.10847637057304382}
+{"f1": 0.6111111111111112, "recall": 0.44, "precision": 1.0, "epoch": 43, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 43, "step": "eval", "model": "classifier"}
+{"epoch": 43, "model": "classifier", "loss": 0.11370784044265747, "eval_loss": 0.10734079778194427}
+{"f1": 0.6111111111111112, "recall": 0.44, "precision": 1.0, "epoch": 44, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 44, "step": "eval", "model": "classifier"}
+{"epoch": 44, "model": "classifier", "loss": 0.10385623574256897, "eval_loss": 0.10643915832042694}
+{"f1": 0.6486486486486487, "recall": 0.48, "precision": 1.0, "epoch": 45, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 45, "step": "eval", "model": "classifier"}
+{"epoch": 45, "model": "classifier", "loss": 0.10302518308162689, "eval_loss": 0.10573339462280273}
+{"f1": 0.6486486486486487, "recall": 0.48, "precision": 1.0, "epoch": 46, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 46, "step": "eval", "model": "classifier"}
+{"epoch": 46, "model": "classifier", "loss": 0.09716730564832687, "eval_loss": 0.10495278239250183}
+{"f1": 0.6486486486486487, "recall": 0.48, "precision": 1.0, "epoch": 47, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 47, "step": "eval", "model": "classifier"}
+{"epoch": 47, "model": "classifier", "loss": 0.09836725890636444, "eval_loss": 0.10426396131515503}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 48, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 48, "step": "eval", "model": "classifier"}
+{"epoch": 48, "model": "classifier", "loss": 0.09477537870407104, "eval_loss": 0.10259195417165756}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 49, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 49, "step": "eval", "model": "classifier"}
+{"epoch": 49, "model": "classifier", "loss": 0.09069803357124329, "eval_loss": 0.10212099552154541}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 50, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 50, "step": "eval", "model": "classifier"}
+{"epoch": 50, "model": "classifier", "loss": 0.09134108573198318, "eval_loss": 0.10162872076034546}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 51, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 51, "step": "eval", "model": "classifier"}
+{"epoch": 51, "model": "classifier", "loss": 0.08961588144302368, "eval_loss": 0.10039302706718445}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 52, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 52, "step": "eval", "model": "classifier"}
+{"epoch": 52, "model": "classifier", "loss": 0.08327322453260422, "eval_loss": 0.1002655178308487}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 53, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 53, "step": "eval", "model": "classifier"}
+{"epoch": 53, "model": "classifier", "loss": 0.0823063924908638, "eval_loss": 0.09874484688043594}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 54, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 54, "step": "eval", "model": "classifier"}
+{"epoch": 54, "model": "classifier", "loss": 0.07975141704082489, "eval_loss": 0.09790172427892685}
+{"f1": 0.717948717948718, "recall": 0.56, "precision": 1.0, "epoch": 55, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 55, "step": "eval", "model": "classifier"}
+{"epoch": 55, "model": "classifier", "loss": 0.08053984493017197, "eval_loss": 0.0970485508441925}
+{"f1": 0.7499999999999999, "recall": 0.6, "precision": 1.0, "epoch": 56, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 56, "step": "eval", "model": "classifier"}
+{"epoch": 56, "model": "classifier", "loss": 0.08102716505527496, "eval_loss": 0.09667375683784485}
+{"f1": 0.7804878048780487, "recall": 0.64, "precision": 1.0, "epoch": 57, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 57, "step": "eval", "model": "classifier"}
+{"epoch": 57, "model": "classifier", "loss": 0.07470209151506424, "eval_loss": 0.09598133713006973}
+{"f1": 0.7804878048780487, "recall": 0.64, "precision": 1.0, "epoch": 58, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 58, "step": "eval", "model": "classifier"}
+{"epoch": 58, "model": "classifier", "loss": 0.07877298444509506, "eval_loss": 0.09536351263523102}
+{"f1": 0.7804878048780487, "recall": 0.64, "precision": 1.0, "epoch": 59, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 59, "step": "eval", "model": "classifier"}
+{"epoch": 59, "model": "classifier", "loss": 0.07265371084213257, "eval_loss": 0.09488622099161148}
+{"f1": 0.7804878048780487, "recall": 0.64, "precision": 1.0, "epoch": 60, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 60, "step": "eval", "model": "classifier"}
+{"epoch": 60, "model": "classifier", "loss": 0.07423878461122513, "eval_loss": 0.09457867592573166}
+{"f1": 0.8095238095238095, "recall": 0.68, "precision": 1.0, "epoch": 61, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 61, "step": "eval", "model": "classifier"}
+{"epoch": 61, "model": "classifier", "loss": 0.0705675259232521, "eval_loss": 0.09404820948839188}
+{"f1": 0.8095238095238095, "recall": 0.68, "precision": 1.0, "epoch": 62, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 62, "step": "eval", "model": "classifier"}
+{"epoch": 62, "model": "classifier", "loss": 0.07233527302742004, "eval_loss": 0.09361448138952255}
+{"f1": 0.8095238095238095, "recall": 0.68, "precision": 1.0, "epoch": 63, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 63, "step": "eval", "model": "classifier"}
+{"epoch": 63, "model": "classifier", "loss": 0.07238172739744186, "eval_loss": 0.0934084802865982}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 64, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 64, "step": "eval", "model": "classifier"}
+{"epoch": 64, "model": "classifier", "loss": 0.06801019608974457, "eval_loss": 0.09287187457084656}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 65, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 65, "step": "eval", "model": "classifier"}
+{"epoch": 65, "model": "classifier", "loss": 0.06785226613283157, "eval_loss": 0.09270834922790527}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 66, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 66, "step": "eval", "model": "classifier"}
+{"epoch": 66, "model": "classifier", "loss": 0.06455149501562119, "eval_loss": 0.0925002247095108}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 67, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 67, "step": "eval", "model": "classifier"}
+{"epoch": 67, "model": "classifier", "loss": 0.06700165569782257, "eval_loss": 0.0924302190542221}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 68, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 68, "step": "eval", "model": "classifier"}
+{"epoch": 68, "model": "classifier", "loss": 0.06398607790470123, "eval_loss": 0.09188356250524521}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 69, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 69, "step": "eval", "model": "classifier"}
+{"epoch": 69, "model": "classifier", "loss": 0.061441246420145035, "eval_loss": 0.09190288186073303}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 70, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 70, "step": "eval", "model": "classifier"}
+{"epoch": 70, "model": "classifier", "loss": 0.05885075032711029, "eval_loss": 0.09189103543758392}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 71, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 71, "step": "eval", "model": "classifier"}
+{"epoch": 71, "model": "classifier", "loss": 0.05764083191752434, "eval_loss": 0.09109979122877121}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 72, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 72, "step": "eval", "model": "classifier"}
+{"epoch": 72, "model": "classifier", "loss": 0.05764799192547798, "eval_loss": 0.09061405062675476}
+{"f1": 0.8372093023255813, "recall": 0.72, "precision": 1.0, "epoch": 73, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 73, "step": "eval", "model": "classifier"}
+{"epoch": 73, "model": "classifier", "loss": 0.0531049408018589, "eval_loss": 0.09052550047636032}
+{"f1": 0.8636363636363636, "recall": 0.76, "precision": 1.0, "epoch": 74, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 74, "step": "eval", "model": "classifier"}
+{"epoch": 74, "model": "classifier", "loss": 0.05488019436597824, "eval_loss": 0.09020325541496277}
+{"f1": 0.8636363636363636, "recall": 0.76, "precision": 1.0, "epoch": 75, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 75, "step": "eval", "model": "classifier"}
+{"epoch": 75, "model": "classifier", "loss": 0.05365884676575661, "eval_loss": 0.08988606929779053}
+{"f1": 0.8636363636363636, "recall": 0.76, "precision": 1.0, "epoch": 76, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 76, "step": "eval", "model": "classifier"}
+{"epoch": 76, "model": "classifier", "loss": 0.05477239191532135, "eval_loss": 0.08948801457881927}
+{"f1": 0.8636363636363636, "recall": 0.76, "precision": 1.0, "epoch": 77, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 77, "step": "eval", "model": "classifier"}
+{"epoch": 77, "model": "classifier", "loss": 0.05349885672330856, "eval_loss": 0.08906050771474838}
+{"f1": 0.8636363636363636, "recall": 0.76, "precision": 1.0, "epoch": 78, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 78, "step": "eval", "model": "classifier"}
+{"epoch": 78, "model": "classifier", "loss": 0.05265476554632187, "eval_loss": 0.08892343193292618}
+{"f1": 0.8636363636363636, "recall": 0.76, "precision": 1.0, "epoch": 79, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 79, "step": "eval", "model": "classifier"}
+{"epoch": 79, "model": "classifier", "loss": 0.053029950708150864, "eval_loss": 0.08872149139642715}
+{"f1": 0.8636363636363636, "recall": 0.76, "precision": 1.0, "epoch": 80, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 80, "step": "eval", "model": "classifier"}
+{"epoch": 80, "model": "classifier", "loss": 0.049842897802591324, "eval_loss": 0.08851177245378494}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 81, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 81, "step": "eval", "model": "classifier"}
+{"epoch": 81, "model": "classifier", "loss": 0.05028446763753891, "eval_loss": 0.0883517935872078}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 82, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 82, "step": "eval", "model": "classifier"}
+{"epoch": 82, "model": "classifier", "loss": 0.04875888675451279, "eval_loss": 0.08828025311231613}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 83, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 83, "step": "eval", "model": "classifier"}
+{"epoch": 83, "model": "classifier", "loss": 0.04634707421064377, "eval_loss": 0.08825521171092987}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 84, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 84, "step": "eval", "model": "classifier"}
+{"epoch": 84, "model": "classifier", "loss": 0.04546660557389259, "eval_loss": 0.08816015720367432}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 85, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 85, "step": "eval", "model": "classifier"}
+{"epoch": 85, "model": "classifier", "loss": 0.04260750487446785, "eval_loss": 0.08809790760278702}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 86, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 86, "step": "eval", "model": "classifier"}
+{"epoch": 86, "model": "classifier", "loss": 0.044738516211509705, "eval_loss": 0.08794154971837997}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 87, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 87, "step": "eval", "model": "classifier"}
+{"epoch": 87, "model": "classifier", "loss": 0.04124604910612106, "eval_loss": 0.08791692554950714}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 88, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 88, "step": "eval", "model": "classifier"}
+{"epoch": 88, "model": "classifier", "loss": 0.040992219001054764, "eval_loss": 0.08760643005371094}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 89, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 89, "step": "eval", "model": "classifier"}
+{"epoch": 89, "model": "classifier", "loss": 0.036559585481882095, "eval_loss": 0.08774315565824509}
+{"f1": 0.9130434782608696, "recall": 0.84, "precision": 1.0, "epoch": 90, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 90, "step": "eval", "model": "classifier"}
+{"epoch": 90, "model": "classifier", "loss": 0.037741903215646744, "eval_loss": 0.08755181729793549}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 91, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 91, "step": "eval", "model": "classifier"}
+{"epoch": 91, "model": "classifier", "loss": 0.03775853291153908, "eval_loss": 0.08740314096212387}
+{"f1": 0.9166666666666666, "recall": 0.88, "precision": 0.9565217391304348, "epoch": 92, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 92, "step": "eval", "model": "classifier"}
+{"epoch": 92, "model": "classifier", "loss": 0.03738795593380928, "eval_loss": 0.08722525089979172}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 93, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 93, "step": "eval", "model": "classifier"}
+{"epoch": 93, "model": "classifier", "loss": 0.03508803993463516, "eval_loss": 0.08732614666223526}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 94, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 94, "step": "eval", "model": "classifier"}
+{"epoch": 94, "model": "classifier", "loss": 0.03930545225739479, "eval_loss": 0.08716319501399994}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 95, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 95, "step": "eval", "model": "classifier"}
+{"epoch": 95, "model": "classifier", "loss": 0.03362538293004036, "eval_loss": 0.08692959696054459}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 96, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 96, "step": "eval", "model": "classifier"}
+{"epoch": 96, "model": "classifier", "loss": 0.033892542123794556, "eval_loss": 0.08680334687232971}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 97, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 97, "step": "eval", "model": "classifier"}
+{"epoch": 97, "model": "classifier", "loss": 0.03102777898311615, "eval_loss": 0.08674751967191696}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 98, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 98, "step": "eval", "model": "classifier"}
+{"epoch": 98, "model": "classifier", "loss": 0.034421198070049286, "eval_loss": 0.08697742223739624}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 99, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 99, "step": "eval", "model": "classifier"}
+{"epoch": 99, "model": "classifier", "loss": 0.033911556005477905, "eval_loss": 0.08679364621639252}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 100, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 100, "step": "eval", "model": "classifier"}
+{"epoch": 100, "model": "classifier", "loss": 0.029297055676579475, "eval_loss": 0.08674721419811249}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 101, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 101, "step": "eval", "model": "classifier"}
+{"epoch": 101, "model": "classifier", "loss": 0.03225081413984299, "eval_loss": 0.08685958385467529}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 102, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 102, "step": "eval", "model": "classifier"}
+{"epoch": 102, "model": "classifier", "loss": 0.03119738958775997, "eval_loss": 0.08661112934350967}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 103, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 103, "step": "eval", "model": "classifier"}
+{"epoch": 103, "model": "classifier", "loss": 0.029901111498475075, "eval_loss": 0.08644221723079681}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 104, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 104, "step": "eval", "model": "classifier"}
+{"epoch": 104, "model": "classifier", "loss": 0.03228694945573807, "eval_loss": 0.08673613518476486}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 105, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 105, "step": "eval", "model": "classifier"}
+{"epoch": 105, "model": "classifier", "loss": 0.029402729123830795, "eval_loss": 0.08650179952383041}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 106, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 106, "step": "eval", "model": "classifier"}
+{"epoch": 106, "model": "classifier", "loss": 0.029920659959316254, "eval_loss": 0.0864340290427208}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 107, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 107, "step": "eval", "model": "classifier"}
+{"epoch": 107, "model": "classifier", "loss": 0.029871178790926933, "eval_loss": 0.08626165986061096}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 108, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 108, "step": "eval", "model": "classifier"}
+{"epoch": 108, "model": "classifier", "loss": 0.02892676740884781, "eval_loss": 0.08622109889984131}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 109, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 109, "step": "eval", "model": "classifier"}
+{"epoch": 109, "model": "classifier", "loss": 0.02971818298101425, "eval_loss": 0.08594579249620438}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 110, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 110, "step": "eval", "model": "classifier"}
+{"epoch": 110, "model": "classifier", "loss": 0.027610693126916885, "eval_loss": 0.08591217547655106}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 111, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 111, "step": "eval", "model": "classifier"}
+{"epoch": 111, "model": "classifier", "loss": 0.028303811326622963, "eval_loss": 0.08569221198558807}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 112, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 112, "step": "eval", "model": "classifier"}
+{"epoch": 112, "model": "classifier", "loss": 0.025469018146395683, "eval_loss": 0.08547379076480865}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 113, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 113, "step": "eval", "model": "classifier"}
+{"epoch": 113, "model": "classifier", "loss": 0.02850286476314068, "eval_loss": 0.08567951619625092}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 114, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 114, "step": "eval", "model": "classifier"}
+{"epoch": 114, "model": "classifier", "loss": 0.025074945762753487, "eval_loss": 0.08549735695123672}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 115, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 115, "step": "eval", "model": "classifier"}
+{"epoch": 115, "model": "classifier", "loss": 0.023729359731078148, "eval_loss": 0.08560226112604141}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 116, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 116, "step": "eval", "model": "classifier"}
+{"epoch": 116, "model": "classifier", "loss": 0.021408561617136, "eval_loss": 0.08528976887464523}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 117, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 117, "step": "eval", "model": "classifier"}
+{"epoch": 117, "model": "classifier", "loss": 0.02349575236439705, "eval_loss": 0.08551886677742004}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 118, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 118, "step": "eval", "model": "classifier"}
+{"epoch": 118, "model": "classifier", "loss": 0.02007489837706089, "eval_loss": 0.08547244220972061}
+{"f1": 0.9361702127659575, "recall": 0.88, "precision": 1.0, "epoch": 119, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 119, "step": "eval", "model": "classifier"}
+{"epoch": 119, "model": "classifier", "loss": 0.022914841771125793, "eval_loss": 0.08569017052650452}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 120, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 120, "step": "eval", "model": "classifier"}
+{"epoch": 120, "model": "classifier", "loss": 0.021708106622099876, "eval_loss": 0.08572055399417877}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 121, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 121, "step": "eval", "model": "classifier"}
+{"epoch": 121, "model": "classifier", "loss": 0.020935382694005966, "eval_loss": 0.08557351678609848}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 122, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 122, "step": "eval", "model": "classifier"}
+{"epoch": 122, "model": "classifier", "loss": 0.022121643647551537, "eval_loss": 0.08578722923994064}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 123, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 123, "step": "eval", "model": "classifier"}
+{"epoch": 123, "model": "classifier", "loss": 0.020556213334202766, "eval_loss": 0.08572874963283539}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 124, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 124, "step": "eval", "model": "classifier"}
+{"epoch": 124, "model": "classifier", "loss": 0.021164558827877045, "eval_loss": 0.08583801239728928}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 125, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 125, "step": "eval", "model": "classifier"}
+{"epoch": 125, "model": "classifier", "loss": 0.017864137887954712, "eval_loss": 0.08571677654981613}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 126, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 126, "step": "eval", "model": "classifier"}
+{"epoch": 126, "model": "classifier", "loss": 0.020389560610055923, "eval_loss": 0.08584272861480713}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 127, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 127, "step": "eval", "model": "classifier"}
+{"epoch": 127, "model": "classifier", "loss": 0.019226880744099617, "eval_loss": 0.08594268560409546}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 128, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 128, "step": "eval", "model": "classifier"}
+{"epoch": 128, "model": "classifier", "loss": 0.02001919038593769, "eval_loss": 0.0863286554813385}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 129, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 129, "step": "eval", "model": "classifier"}
+{"epoch": 129, "model": "classifier", "loss": 0.018527494743466377, "eval_loss": 0.08636778593063354}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 130, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 130, "step": "eval", "model": "classifier"}
+{"epoch": 130, "model": "classifier", "loss": 0.017155244946479797, "eval_loss": 0.08647586405277252}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 131, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 131, "step": "eval", "model": "classifier"}
+{"epoch": 131, "model": "classifier", "loss": 0.01820162869989872, "eval_loss": 0.08662942051887512}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 132, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 132, "step": "eval", "model": "classifier"}
+{"epoch": 132, "model": "classifier", "loss": 0.01768318936228752, "eval_loss": 0.08660434186458588}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 133, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 133, "step": "eval", "model": "classifier"}
+{"epoch": 133, "model": "classifier", "loss": 0.015448912978172302, "eval_loss": 0.08641645312309265}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 134, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 134, "step": "eval", "model": "classifier"}
+{"epoch": 134, "model": "classifier", "loss": 0.01778825744986534, "eval_loss": 0.08686334639787674}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 135, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 135, "step": "eval", "model": "classifier"}
+{"epoch": 135, "model": "classifier", "loss": 0.015336166135966778, "eval_loss": 0.08682172745466232}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 136, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 136, "step": "eval", "model": "classifier"}
+{"epoch": 136, "model": "classifier", "loss": 0.01676148921251297, "eval_loss": 0.08684387803077698}
+{"f1": 0.9583333333333334, "recall": 0.92, "precision": 1.0, "epoch": 137, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 137, "step": "eval", "model": "classifier"}
+{"epoch": 137, "model": "classifier", "loss": 0.01830793172121048, "eval_loss": 0.08699902147054672}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 138, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 138, "step": "eval", "model": "classifier"}
+{"epoch": 138, "model": "classifier", "loss": 0.01647285372018814, "eval_loss": 0.08705232292413712}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 139, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 139, "step": "eval", "model": "classifier"}
+{"epoch": 139, "model": "classifier", "loss": 0.015432331711053848, "eval_loss": 0.08690841495990753}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 140, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 140, "step": "eval", "model": "classifier"}
+{"epoch": 140, "model": "classifier", "loss": 0.015280903317034245, "eval_loss": 0.08718328177928925}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 141, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 141, "step": "eval", "model": "classifier"}
+{"epoch": 141, "model": "classifier", "loss": 0.01616867072880268, "eval_loss": 0.08697479963302612}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 142, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 142, "step": "eval", "model": "classifier"}
+{"epoch": 142, "model": "classifier", "loss": 0.01558384858071804, "eval_loss": 0.08707235008478165}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 143, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 143, "step": "eval", "model": "classifier"}
+{"epoch": 143, "model": "classifier", "loss": 0.014264905825257301, "eval_loss": 0.08731134235858917}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 144, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 144, "step": "eval", "model": "classifier"}
+{"epoch": 144, "model": "classifier", "loss": 0.015498694032430649, "eval_loss": 0.08761397004127502}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 145, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 145, "step": "eval", "model": "classifier"}
+{"epoch": 145, "model": "classifier", "loss": 0.014360055327415466, "eval_loss": 0.08796809613704681}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 146, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 146, "step": "eval", "model": "classifier"}
+{"epoch": 146, "model": "classifier", "loss": 0.014651770703494549, "eval_loss": 0.0878916084766388}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 147, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 147, "step": "eval", "model": "classifier"}
+{"epoch": 147, "model": "classifier", "loss": 0.013288515619933605, "eval_loss": 0.08796659857034683}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 148, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 148, "step": "eval", "model": "classifier"}
+{"epoch": 148, "model": "classifier", "loss": 0.013907484710216522, "eval_loss": 0.08824405819177628}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 149, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 149, "step": "eval", "model": "classifier"}
+{"epoch": 149, "model": "classifier", "loss": 0.013074458576738834, "eval_loss": 0.0885099396109581}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 150, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 150, "step": "eval", "model": "classifier"}
+{"epoch": 150, "model": "classifier", "loss": 0.013824300840497017, "eval_loss": 0.08857777714729309}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 151, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 151, "step": "eval", "model": "classifier"}
+{"epoch": 151, "model": "classifier", "loss": 0.013720166869461536, "eval_loss": 0.08867699652910233}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 152, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 152, "step": "eval", "model": "classifier"}
+{"epoch": 152, "model": "classifier", "loss": 0.012881969101727009, "eval_loss": 0.08839547634124756}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 153, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 153, "step": "eval", "model": "classifier"}
+{"epoch": 153, "model": "classifier", "loss": 0.013161769136786461, "eval_loss": 0.08845564723014832}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 154, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 154, "step": "eval", "model": "classifier"}
+{"epoch": 154, "model": "classifier", "loss": 0.013522081077098846, "eval_loss": 0.08911959081888199}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 155, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 155, "step": "eval", "model": "classifier"}
+{"epoch": 155, "model": "classifier", "loss": 0.0133128110319376, "eval_loss": 0.08913885802030563}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 156, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 156, "step": "eval", "model": "classifier"}
+{"epoch": 156, "model": "classifier", "loss": 0.012711928226053715, "eval_loss": 0.08906443417072296}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 157, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 157, "step": "eval", "model": "classifier"}
+{"epoch": 157, "model": "classifier", "loss": 0.012844560667872429, "eval_loss": 0.08911202102899551}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 158, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 158, "step": "eval", "model": "classifier"}
+{"epoch": 158, "model": "classifier", "loss": 0.011895829811692238, "eval_loss": 0.08907683938741684}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 159, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 159, "step": "eval", "model": "classifier"}
+{"epoch": 159, "model": "classifier", "loss": 0.011183550581336021, "eval_loss": 0.08900010585784912}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 160, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 160, "step": "eval", "model": "classifier"}
+{"epoch": 160, "model": "classifier", "loss": 0.011838341131806374, "eval_loss": 0.08927076309919357}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 161, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 161, "step": "eval", "model": "classifier"}
+{"epoch": 161, "model": "classifier", "loss": 0.01253324281424284, "eval_loss": 0.08971906453371048}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 162, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 162, "step": "eval", "model": "classifier"}
+{"epoch": 162, "model": "classifier", "loss": 0.010886994190514088, "eval_loss": 0.08972062915563583}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 163, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 163, "step": "eval", "model": "classifier"}
+{"epoch": 163, "model": "classifier", "loss": 0.010412727482616901, "eval_loss": 0.08990442752838135}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 164, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 164, "step": "eval", "model": "classifier"}
+{"epoch": 164, "model": "classifier", "loss": 0.011683792807161808, "eval_loss": 0.09021756052970886}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 165, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 165, "step": "eval", "model": "classifier"}
+{"epoch": 165, "model": "classifier", "loss": 0.011152392253279686, "eval_loss": 0.09083714336156845}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 166, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 166, "step": "eval", "model": "classifier"}
+{"epoch": 166, "model": "classifier", "loss": 0.01063409075140953, "eval_loss": 0.09048688411712646}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 167, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 167, "step": "eval", "model": "classifier"}
+{"epoch": 167, "model": "classifier", "loss": 0.012296617962419987, "eval_loss": 0.0902790054678917}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 168, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 168, "step": "eval", "model": "classifier"}
+{"epoch": 168, "model": "classifier", "loss": 0.010704662650823593, "eval_loss": 0.09027574211359024}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 169, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 169, "step": "eval", "model": "classifier"}
+{"epoch": 169, "model": "classifier", "loss": 0.011268777772784233, "eval_loss": 0.09105893224477768}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 170, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 170, "step": "eval", "model": "classifier"}
+{"epoch": 170, "model": "classifier", "loss": 0.010546362958848476, "eval_loss": 0.09100444614887238}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 171, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 171, "step": "eval", "model": "classifier"}
+{"epoch": 171, "model": "classifier", "loss": 0.010099496692419052, "eval_loss": 0.09095056354999542}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 172, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 172, "step": "eval", "model": "classifier"}
+{"epoch": 172, "model": "classifier", "loss": 0.010906372219324112, "eval_loss": 0.09110818803310394}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 173, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 173, "step": "eval", "model": "classifier"}
+{"epoch": 173, "model": "classifier", "loss": 0.01124795526266098, "eval_loss": 0.09137185662984848}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 174, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 174, "step": "eval", "model": "classifier"}
+{"epoch": 174, "model": "classifier", "loss": 0.010545577853918076, "eval_loss": 0.0911671593785286}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 175, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 175, "step": "eval", "model": "classifier"}
+{"epoch": 175, "model": "classifier", "loss": 0.0089727146551013, "eval_loss": 0.09126561880111694}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 176, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 176, "step": "eval", "model": "classifier"}
+{"epoch": 176, "model": "classifier", "loss": 0.010138486512005329, "eval_loss": 0.09159058332443237}
+{"f1": 0.9795918367346939, "recall": 0.96, "precision": 1.0, "epoch": 177, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 177, "step": "eval", "model": "classifier"}
+{"epoch": 177, "model": "classifier", "loss": 0.008294371888041496, "eval_loss": 0.09167143702507019}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 178, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 178, "step": "eval", "model": "classifier"}
+{"epoch": 178, "model": "classifier", "loss": 0.009363164193928242, "eval_loss": 0.09171295166015625}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 179, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 179, "step": "eval", "model": "classifier"}
+{"epoch": 179, "model": "classifier", "loss": 0.01041504554450512, "eval_loss": 0.09180151671171188}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 180, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 180, "step": "eval", "model": "classifier"}
+{"epoch": 180, "model": "classifier", "loss": 0.009374432265758514, "eval_loss": 0.09232864528894424}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 181, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 181, "step": "eval", "model": "classifier"}
+{"epoch": 181, "model": "classifier", "loss": 0.008251491002738476, "eval_loss": 0.092144675552845}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 182, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 182, "step": "eval", "model": "classifier"}
+{"epoch": 182, "model": "classifier", "loss": 0.011056018993258476, "eval_loss": 0.09232114255428314}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 183, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 183, "step": "eval", "model": "classifier"}
+{"epoch": 183, "model": "classifier", "loss": 0.009461156092584133, "eval_loss": 0.0926232635974884}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 184, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 184, "step": "eval", "model": "classifier"}
+{"epoch": 184, "model": "classifier", "loss": 0.009647328406572342, "eval_loss": 0.0925675481557846}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 185, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 185, "step": "eval", "model": "classifier"}
+{"epoch": 185, "model": "classifier", "loss": 0.008341467939317226, "eval_loss": 0.0926915630698204}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 186, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 186, "step": "eval", "model": "classifier"}
+{"epoch": 186, "model": "classifier", "loss": 0.007832447066903114, "eval_loss": 0.0928570032119751}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 187, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 187, "step": "eval", "model": "classifier"}
+{"epoch": 187, "model": "classifier", "loss": 0.008567185141146183, "eval_loss": 0.09291158616542816}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 188, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 188, "step": "eval", "model": "classifier"}
+{"epoch": 188, "model": "classifier", "loss": 0.009091583080589771, "eval_loss": 0.09324251115322113}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 189, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 189, "step": "eval", "model": "classifier"}
+{"epoch": 189, "model": "classifier", "loss": 0.008664306253194809, "eval_loss": 0.09321115911006927}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 190, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 190, "step": "eval", "model": "classifier"}
+{"epoch": 190, "model": "classifier", "loss": 0.008357807993888855, "eval_loss": 0.0934707447886467}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 191, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 191, "step": "eval", "model": "classifier"}
+{"epoch": 191, "model": "classifier", "loss": 0.007858475670218468, "eval_loss": 0.0932186096906662}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 192, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 192, "step": "eval", "model": "classifier"}
+{"epoch": 192, "model": "classifier", "loss": 0.008250104263424873, "eval_loss": 0.09360092133283615}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 193, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 193, "step": "eval", "model": "classifier"}
+{"epoch": 193, "model": "classifier", "loss": 0.009461511857807636, "eval_loss": 0.09381978958845139}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 194, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 194, "step": "eval", "model": "classifier"}
+{"epoch": 194, "model": "classifier", "loss": 0.007314951159060001, "eval_loss": 0.09385078400373459}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 195, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 195, "step": "eval", "model": "classifier"}
+{"epoch": 195, "model": "classifier", "loss": 0.007534119766205549, "eval_loss": 0.09365134686231613}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 196, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 196, "step": "eval", "model": "classifier"}
+{"epoch": 196, "model": "classifier", "loss": 0.007502959109842777, "eval_loss": 0.09381312131881714}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 197, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 197, "step": "eval", "model": "classifier"}
+{"epoch": 197, "model": "classifier", "loss": 0.006575740408152342, "eval_loss": 0.09362439066171646}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 198, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 198, "step": "eval", "model": "classifier"}
+{"epoch": 198, "model": "classifier", "loss": 0.008390309289097786, "eval_loss": 0.09406639635562897}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 199, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 199, "step": "eval", "model": "classifier"}
+{"epoch": 199, "model": "classifier", "loss": 0.006782247684895992, "eval_loss": 0.0941472053527832}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 200, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 200, "step": "eval", "model": "classifier"}
+{"epoch": 200, "model": "classifier", "loss": 0.007445439230650663, "eval_loss": 0.09428232163190842}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 201, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 201, "step": "eval", "model": "classifier"}
+{"epoch": 201, "model": "classifier", "loss": 0.008136549033224583, "eval_loss": 0.09498447179794312}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 202, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 202, "step": "eval", "model": "classifier"}
+{"epoch": 202, "model": "classifier", "loss": 0.0072655268013477325, "eval_loss": 0.09472169727087021}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 203, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 203, "step": "eval", "model": "classifier"}
+{"epoch": 203, "model": "classifier", "loss": 0.006877811625599861, "eval_loss": 0.09491320699453354}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 204, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 204, "step": "eval", "model": "classifier"}
+{"epoch": 204, "model": "classifier", "loss": 0.007852611131966114, "eval_loss": 0.09526975452899933}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 205, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 205, "step": "eval", "model": "classifier"}
+{"epoch": 205, "model": "classifier", "loss": 0.008054966107010841, "eval_loss": 0.09571141749620438}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 206, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 206, "step": "eval", "model": "classifier"}
+{"epoch": 206, "model": "classifier", "loss": 0.007970795966684818, "eval_loss": 0.095865398645401}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 207, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 207, "step": "eval", "model": "classifier"}
+{"epoch": 207, "model": "classifier", "loss": 0.0072258105501532555, "eval_loss": 0.09601325541734695}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 208, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 208, "step": "eval", "model": "classifier"}
+{"epoch": 208, "model": "classifier", "loss": 0.005964072421193123, "eval_loss": 0.09585967659950256}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 209, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 209, "step": "eval", "model": "classifier"}
+{"epoch": 209, "model": "classifier", "loss": 0.007023694925010204, "eval_loss": 0.09631869941949844}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 210, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 210, "step": "eval", "model": "classifier"}
+{"epoch": 210, "model": "classifier", "loss": 0.007215625606477261, "eval_loss": 0.09625667333602905}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 211, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 211, "step": "eval", "model": "classifier"}
+{"epoch": 211, "model": "classifier", "loss": 0.006433979142457247, "eval_loss": 0.09652107954025269}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 212, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 212, "step": "eval", "model": "classifier"}
+{"epoch": 212, "model": "classifier", "loss": 0.0061539094895124435, "eval_loss": 0.09651044756174088}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 213, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 213, "step": "eval", "model": "classifier"}
+{"epoch": 213, "model": "classifier", "loss": 0.006449895910918713, "eval_loss": 0.09650782495737076}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 214, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 214, "step": "eval", "model": "classifier"}
+{"epoch": 214, "model": "classifier", "loss": 0.006084210239350796, "eval_loss": 0.09650789946317673}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 215, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 215, "step": "eval", "model": "classifier"}
+{"epoch": 215, "model": "classifier", "loss": 0.0065316795371472836, "eval_loss": 0.09650792181491852}
+{"f1": 1.0, "recall": 1.0, "precision": 1.0, "epoch": 216, "step": "train", "model": "classifier"}
+{"f1": 0.5, "recall": 0.3333333333333333, "precision": 1.0, "epoch": 216, "step": "eval", "model": "classifier"}
+{"train_f1": 1.0, "val_f1": 0.5}

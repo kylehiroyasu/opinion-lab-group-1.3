@@ -3,7 +3,7 @@ import torch.nn as nn
 
 class Model(nn.Module):
 
-    def __init__(self, embedding_dim, output_dim):
+    def __init__(self, embedding_dim, output_dim, ):
         """ Initilizes the Model. Creates the attention matrix M as well
         as the linear layer used afterwards. For more information see the
         ABAE paper.
@@ -140,7 +140,7 @@ class LinAvgModel(nn.Module):
 
 class Classification(nn.Module):
 
-    def __init__(self, previous_model, input_dim, output_dim=1):
+    def __init__(self, previous_model, input_dim, output_dim=1, activation="relu"):
         """ Initializes a classification layer. This can be used to 
         identify which class belongs to which output of the previous
         model. In a binary case this might not be necessary, but it
@@ -155,8 +155,15 @@ class Classification(nn.Module):
         """
         super(Classification, self).__init__()
         self.model = previous_model
-        self.model.use_softmax = True
-        self.relu = nn.ReLU()
+        self.model.use_softmax = False
+        if activation == "tanh":
+            self.activation = nn.Tanh()
+        elif activation == "sigmoid":
+            self.activation = nn.Sigmoid()
+        elif activation == "softmax":
+            self.model.use_softmax = True
+        else:
+            self.activation = nn.ReLU()
         self.linear = nn.Linear(input_dim, output_dim)
         if output_dim == 1:
             self.sigmoid = nn.Sigmoid()
@@ -177,7 +184,7 @@ class Classification(nn.Module):
         """ 
         x = self.model(x)
         if not self.model.use_softmax:
-            x = self.relu(x)
+            x = self.activation(x)
         x = self.linear(x)
         x = self.sigmoid(x)
         return x

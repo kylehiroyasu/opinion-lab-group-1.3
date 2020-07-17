@@ -71,21 +71,23 @@ def load_embeddings(name):
     random_sampling=("Use random sampling strategy", "flag", "s"),
     epochs=("The number of epoch to train with", "option", "e", int, None),
     lr=("Learning rate", "option", "lr", float, None),
-    cuda=("Flag if cuda should be used", "flag", None)
+    cuda=("Flag if cuda should be used", "flag", None),
+    freeze=("Flag if weights should be frozen", "flag", "f")
 )
-def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=0.00005, cuda=False, random_sampling=False):
+def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False, binary=False, binary_target_class='DRINKS', epochs=500, lr=5e-5, cuda=False, freeze=False, random_sampling=False):
     use_attributes = label == 'attribute' 
     use_restaurant = dataset == 'restaurants'
     
     embeddings = load_embeddings(embedding)
     embedding_dim = 100 if embedding == 'glove' else 3072
 
+
     #Loading data and correct labels
     train_set, test_set, entities, attributes = load_datasets(use_restaurant)
     # This is the dimension of the output of the ABAE model, the classification model gets this as input
     # It does not need to be related to the number of classes etc.
     output_dim = len(attributes if use_attributes else entities)
- 
+
     if binary:
         train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, use_attributes, 
                                                                         binary_target_class, embeddings)
@@ -111,10 +113,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         train_dataset = dfToDataset(train_set, entities, attributes, embeddings)
         test_dataset = dfToDataset(test_set, entities, attributes, embeddings)
         print(len(train_dataset))
-
-    print("Loaded dataset")
-    
-
+        
 
     param = {
         "dataset":dataset,
@@ -141,7 +140,7 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
         "use_micro_average": True,
         "train_entities": not use_attributes,
         "target_class": binary_target_class,
-        "freeze": False,
+        "freeze": freeze,
         "save_training_records": True,
         "use_linmodel": True,
         "switch_to_relu": False,
