@@ -48,7 +48,7 @@ def calculate_metrics(targets, predictions, average='binary'):
     # If the output dimension is 1, we used the sigmoid function
     # We want to compute for each prediction the argmax class -> for sigmoid
     statistic = {}
-    max_classes = np.squeeze(max_classes)
+    max_classes = np.squeeze(predictions)
     statistic["f1"] = f1_score(targets, max_classes, average=average)
     statistic["recall"] = recall_score(targets, max_classes, average=average)
     statistic["precision"] = precision_score(targets, max_classes, average=average)
@@ -88,10 +88,6 @@ _, test_set, entities, attributes = load_datasets(True)
 
 for file in log_files:
 
-    embeddings = BertEmbeddings("bert-base-cased")
-    embedding_dim = 3072
-    print("Loaded embeddings")
-
     model_name = file.split("\\")[-1]
     with open(file, "r") as f:
         line = f.readline()
@@ -106,6 +102,10 @@ for file in log_files:
         print("Skipping:", file)
         continue
     binary_target_class = param["binary_target_class"]
+
+    embeddings = BertEmbeddings("bert-base-cased")
+    embedding_dim = 3072
+    print("Loaded embeddings")
 
     middel_dim = 6 if use_attributes else 7
 
@@ -142,8 +142,15 @@ for file in log_files:
         #sentences = sentences.to(device)
         output = model(sentences)
         output.detach()
-        aggregated_targets.append(target.to(torch.device('cpu')))
-        aggregated_outputs.append(output.to(torch.device('cpu')))
+        if output.size()[1] == 1:
+            max_classes = torch.round(output)
+        else:
+            max_classes = torch.argmax(output, dim=1)
+        max_classes = max_classes.to(torch.device('cpu')).detach().numpy()
+        targets = target.to(torch.device('cpu')).detach().numpy()
+
+        aggregated_targets.append(targets)
+        aggregated_outputs.append(max_classes)
         del sentences
 
     for sentences, entities, attributes in other_dataloader:
