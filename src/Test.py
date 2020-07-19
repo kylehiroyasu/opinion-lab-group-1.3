@@ -6,7 +6,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
+import flair
 from flair.embeddings import BertEmbeddings
+
+flair.device = torch.device('cpu')
 
 from sklearn.metrics import f1_score, precision_score, recall_score
 
@@ -44,12 +47,6 @@ def calculate_metrics(targets, predictions, average='binary'):
     """
     # If the output dimension is 1, we used the sigmoid function
     # We want to compute for each prediction the argmax class -> for sigmoid
-    if predictions.size()[1] == 1:
-        max_classes = torch.round(predictions)
-    else:
-        max_classes = torch.argmax(predictions, dim=1)
-    max_classes = max_classes.to(torch.device('cpu')).detach().numpy()
-    targets = targets.to(torch.device('cpu')).detach().numpy()
     statistic = {}
     max_classes = np.squeeze(max_classes)
     statistic["f1"] = f1_score(targets, max_classes, average=average)
@@ -74,23 +71,27 @@ RESTAURANT_ENTITIES = {"AMBIENCE": 0, "DRINKS": 1, "FOOD": 2, "LOCATION": 3, "RE
 RESTAURANT_ATTRIBUTES = {"GENERAL": 0, "MISCELLANEOUS": 1, "PRICES": 2, "QUALITY": 3, "STYLE_OPTIONS": 4, "NaN": 5}
 
 """ Parameters to set: """
-use_attributes = True
-log_folder_string = "records/restaurants/attribute"
+use_attributes = False
+log_folder_string = "records/restaurants/entity_multiple_runs"
 """ End parameters """
 
-model_folder_string = "models/restaurants/" + "attribute/" if use_attributes else "entity/"
+model_folder_string = "models/restaurants/" + ("attribute/" if use_attributes else "entity/")
 log_files = glob.glob(log_folder_string+"/training*")
 print("Evaluation of:", "attribute" if use_attributes else "entity")
 
-device = torch.device('cuda')
-embeddings = BertEmbeddings("bert-base-cased")
-embedding_dim = 3072
-print("Loaded embeddings")
+device = torch.device('cpu')
 
 aggregated_targets = []
 aggregated_outputs = []
 
+_, test_set, entities, attributes = load_datasets(True)
+
 for file in log_files:
+
+    embeddings = BertEmbeddings("bert-base-cased")
+    embedding_dim = 3072
+    print("Loaded embeddings")
+
     model_name = file.split("\\")[-1]
     with open(file, "r") as f:
         line = f.readline()
@@ -117,12 +118,11 @@ for file in log_files:
     try:
         model = load_model(model, model_folder_string+model_name)
     except:
+        print(model_folder_string)
         print("Could not find model file:", model_folder_string+model_name)
         continue
-    model.to(device)
+    #model.to(device)
     print("Loaded model")
-
-    _, test_set, entities, attributes = load_datasets(True)
 
     train_dataset, other_train_dataset = dfToBinarySamplingDatasets(test_set, use_attributes, 
                                                                             binary_target_class, embeddings)
@@ -138,20 +138,37 @@ for file in log_files:
             target = attributes
         else:
             target = entities
+        print(sentences.device)
+        #sentences = sentences.to(device)
         output = model(sentences)
+        output.detach()
         aggregated_targets.append(target.to(torch.device('cpu')))
         aggregated_outputs.append(output.to(torch.device('cpu')))
+        del sentences
 
     for sentences, entities, attributes in other_dataloader:
         if use_attributes:
             target = attributes
         else:
             target = entities
+        #sentences = sentences.to(device)
         output = model(sentences)
-        aggregated_targets.append(target.to(torch.device('cpu')))
-        aggregated_outputs.append(output.to(torch.device('cpu')))
+        output.detach()
+        if output.size()[1] == 1:
+            max_classes = torch.round(output)
+        else:
+            max_classes = torch.argmax(output, dim=1)
+        max_classes = max_classes.to(torch.device('cpu')).detach().numpy()
+        targets = target.to(torch.device('cpu')).detach().numpy()
 
-aggregated_targets = torch.cat(aggregated_targets)
-aggregated_outputs = torch.cat(aggregated_outputs)
+        aggregated_targets.append(targets)
+        aggregated_outputs.append(max_classes)
+        del sentences
+
+    model = model.to(torch.device("cpu"))
+    del model
+
+aggregated_targets = np.concatenate(aggregated_targets)
+aggregated_outputs = np.concatenate(aggregated_outputs)
 metrics = calculate_metrics(aggregated_targets, aggregated_outputs)
 print(metrics)

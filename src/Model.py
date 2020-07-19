@@ -191,4 +191,8 @@ class Classification(nn.Module):
 
 def save_model(model, path):
     t.save(model.state_dict(), path)
+
+def load_model(model, path):
+    model.load_state_dict(t.load(path, map_location=t.device('cpu')))
+    return model
         
