@@ -87,74 +87,75 @@ def main(dataset="restaurants", label="entity", embedding='glove', use_kcl=False
     # This is the dimension of the output of the ABAE model, the classification model gets this as input
     # It does not need to be related to the number of classes etc.
     output_dim = len(attributes if use_attributes else entities)
+    for i in range(9):
+        if binary:
+            train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, use_attributes, 
+                                                                            binary_target_class, embeddings)
+            test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, use_attributes, 
+                                                                            binary_target_class, embeddings)
+            print(len(train_dataset), len(other_train_dataset))
 
-    if binary:
-        train_dataset, other_train_dataset = dfToBinarySamplingDatasets(train_set, use_attributes, 
-                                                                        binary_target_class, embeddings)
-        test_dataset, other_test_dataset = dfToBinarySamplingDatasets(test_set, use_attributes, 
-                                                                        binary_target_class, embeddings)
-        print(len(train_dataset), len(other_train_dataset))
+            if random_sampling:
+                train_dataset = AspectDataset(train_dataset.sentences+other_train_dataset.sentences,
+                    train_dataset.entities+other_train_dataset.entities, 
+                    {}, 
+                    train_dataset.attributes+other_train_dataset.attributes, 
+                    {}, 
+                    embeddings)
 
-        if random_sampling:
-            train_dataset = AspectDataset(train_dataset.sentences+other_train_dataset.sentences,
-                train_dataset.entities+other_train_dataset.entities, 
-                {}, 
-                train_dataset.attributes+other_train_dataset.attributes, 
-                {}, 
-                embeddings)
+                test_dataset = AspectDataset(test_dataset.sentences+other_test_dataset.sentences, 
+                    test_dataset.entities+other_test_dataset.entities, 
+                    {}, 
+                    test_dataset.attributes+other_test_dataset.attributes, 
+                    {}, 
+                    embeddings)
+        else:
+            train_dataset = dfToDataset(train_set, entities, attributes, embeddings)
+            test_dataset = dfToDataset(test_set, entities, attributes, embeddings)
+            print(len(train_dataset))
+            
 
-            test_dataset = AspectDataset(test_dataset.sentences+other_test_dataset.sentences, 
-                test_dataset.entities+other_test_dataset.entities, 
-                {}, 
-                test_dataset.attributes+other_test_dataset.attributes, 
-                {}, 
-                embeddings)
-    else:
-        train_dataset = dfToDataset(train_set, entities, attributes, embeddings)
-        test_dataset = dfToDataset(test_set, entities, attributes, embeddings)
-        print(len(train_dataset))
-        
+        param = {
+            "dataset":dataset,
+            "label": label,
+            "embedding": embedding,
+            "binary":binary,
+            "binary_target_class": binary_target_class,
+            "random_sampling": random_sampling,
+            "embedding_dim": embedding_dim,
+            "output_dim": output_dim,
+            "classification_dim": len(attributes if use_attributes else entities) if not binary else 1,
+            "epochs": epochs,
+            "lr": lr,
+            "lr_decay_epochs": 350,
+            "batch_size": 512,
+            "use_padding": True,
+            "validation_percentage": 0.1,
+            "binary_sampling_percentage": 1,
+            "cuda": cuda,
+            "use_kcl": use_kcl,
+            "with_supervised": False,
+            "patience_early_stopping": 100,
+            "save_model_path": 'models/{}/{}/'.format(dataset, label),
+            "use_micro_average": True,
+            "train_entities": not use_attributes,
+            "target_class": binary_target_class,
+            "freeze": freeze,
+            "save_training_records": True,
+            "use_linmodel": True,
+            "switch_to_relu": False,
+            "records_data_path": 'records/{}/{}/'.format(dataset, label),
+            'activation':'relu'
+        }
 
-    param = {
-        "dataset":dataset,
-        "label": label,
-        "embedding": embedding,
-        "binary":binary,
-        "binary_target_class": binary_target_class,
-        "random_sampling": random_sampling,
-        "embedding_dim": embedding_dim,
-        "output_dim": output_dim,
-        "classification_dim": len(attributes if use_attributes else entities) if not binary else 1,
-        "epochs": epochs,
-        "lr": lr,
-        "lr_decay_epochs": 350,
-        "batch_size": 512,
-        "use_padding": True,
-        "validation_percentage": 0.1,
-        "binary_sampling_percentage": 1,
-        "cuda": cuda,
-        "use_kcl": use_kcl,
-        "with_supervised": False,
-        "patience_early_stopping": 100,
-        "save_model_path": 'models/{}/{}/'.format(dataset, label),
-        "use_micro_average": True,
-        "train_entities": not use_attributes,
-        "target_class": binary_target_class,
-        "freeze": freeze,
-        "save_training_records": True,
-        "use_linmodel": True,
-        "switch_to_relu": False,
-        "records_data_path": 'records/{}/{}/'.format(dataset, label)
-    }
-
-    if binary:
-        trainer = Trainer(train_dataset, param, other_train_dataset)
-        if random_sampling:
-            trainer = RandomSamplingTrainer(train_dataset, param)
-    else:
-        trainer = MulticlassTrainer(train_dataset, param)
-    model = trainer.train()
-    model = trainer.train_classifier(freeze=False, new_param=param)
+        if binary:
+            trainer = Trainer(train_dataset, param, other_train_dataset)
+            if random_sampling:
+                trainer = RandomSamplingTrainer(train_dataset, param)
+        else:
+            trainer = MulticlassTrainer(train_dataset, param)
+        model = trainer.train()
+        model = trainer.train_classifier(freeze=False, new_param=param)
 
 if __name__ == '__main__':
     print(plac.call(main))
