@@ -71,8 +71,8 @@ RESTAURANT_ENTITIES = {"AMBIENCE": 0, "DRINKS": 1, "FOOD": 2, "LOCATION": 3, "RE
 RESTAURANT_ATTRIBUTES = {"GENERAL": 0, "MISCELLANEOUS": 1, "PRICES": 2, "QUALITY": 3, "STYLE_OPTIONS": 4, "NaN": 5}
 
 """ Parameters to set: """
-use_attributes = False
-log_folder_string = "records/restaurants/entity_multiple_runs"
+use_attributes = True
+log_folder_string = "records/restaurants/attribute_multiple_runs_kcl"
 """ End parameters """
 
 model_folder_string = "models/restaurants/" + ("attribute/" if use_attributes else "entity/")
@@ -88,7 +88,7 @@ _, test_set, entities, attributes = load_datasets(True)
 
 for file in log_files:
 
-    model_name = file.split("\\")[-1]
+    model_name = os.path.basename(file)
     with open(file, "r") as f:
         line = f.readline()
         param = json.loads(line)
