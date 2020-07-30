@@ -1,5 +1,5 @@
 # opinion-lab-group-1.3
-KCL and LDS Effects on Aspect Extraction
+KCL and MCL Effects on Aspect Extraction
 
 This folder contains the codebase used to run the experiments and measure results of the experiments outlined in our report. At the root level this repository consists of 5 folders:
 
