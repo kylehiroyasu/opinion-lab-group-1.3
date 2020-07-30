@@ -2,6 +2,7 @@ This folder contains the code to run experiments related to aspect based entity 
 
 - `Main.py`: Contains core code to train models via CLI, this script writes logs to the `records` folder and saves the trained models under `models` for further benchmarking. See `run.sh` for examples of usage.
 - `Test.py`: Responsible for loading the relevant models and generating the aggregated F1-scores which were reported. These aggregated metrics were calculated by directly modifying the file instead of creating a CLI since we only used this script a handful of times.
+- `TestJoint.py`: Script used to evaluate the joint attribute & entity performance. Based on the log folder, we automatically fetch the correct model.
 - `Trainer.py`: Contains the code related to training the ABAE model with the KCL/MCL training adaption.
 - `Model.py`: Contains the code which encapsulates the detailed architecture of the ABAE model.
 
